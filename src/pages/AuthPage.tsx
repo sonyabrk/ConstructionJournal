@@ -1,13 +1,13 @@
 function AuthPage() {
     return (
         <>
-            <div className='authorization'>
-                <p>Вход</p>
-                <label>Логин:</label>
+            <div className="authorization">
+                <p className="authEnter">Вход</p>
+                <label className="athLog">Логин:</label>
                 <input id="email" type="email" placeholder="Введите email"/>
-                <label>Пароль:</label>
+                <label className="authPas">Пароль:</label>
                 <input id="password" type="password" placeholder="Введите пароль"/>
-                <button type="submit">Войти</button>
+                <button type="submit" className="AuthEnterBtn">Войти</button>
             </div>
         </>
     );
