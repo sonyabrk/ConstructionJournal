@@ -7,7 +7,7 @@ function Header() {
                 <a href="/" className="headerProfile">
                     <img src={profileSvg} alt="Профиль"/>
                 </a>
-                <p>Электронный журнал</p>
+                <p className="headerJournal">Электронный журнал</p>
             </div>
         </>
     )
