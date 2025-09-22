@@ -1,4 +1,3 @@
-// src/types/api.ts
 export interface Role {
   id: number;
   name: 'constractor' | 'supervision' | 'inspector' | 'developer' | 'admin' | 'worker';
@@ -16,7 +15,7 @@ export interface User {
 export interface ConstructionProject {
   id: number;
   name: string;
-  coordinates: [number, number][]; // Массив координат [x, y]
+  coordinates: [number, number][]; 
   users: User[];
 }
 
@@ -27,9 +26,8 @@ export interface Post {
   author: User;
 }
 
-// Типы для запросов и ответов API
 export interface LoginRequest {
-  email: string; // Изменено с username на email
+  email: string; 
   password: string;
 }
 
