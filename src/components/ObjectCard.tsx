@@ -15,7 +15,7 @@ function ObjectCard({ address, coordinates, supervision, contractor, objectStatu
                 <p className="card">Служба строительного контроля (ответственный):<br/>{supervision}</p>
                 <p className="card">Подрядчик (ответственный):<br/>{contractor}</p>
                 <p className="cardObjectStatus">Состояние объекта: {objectStatus}</p>
-                <button type="submit" className="objectBtn">Обзор</button>
+                <button className="objectBtn">Обзор</button>
             </div>
         </>
     )
