@@ -1,58 +1,120 @@
 export interface Role {
-  id: number;
-  name: 'constractor' | 'supervision' | 'inspector' | 'developer' | 'admin' | 'worker';
+    id: number;
+    name: 'constractor' | 'supervision' | 'inspector' | 'developer' | 'admin' | 'worker';
 }
 
 export interface User {
-  id: number;
-  username: string;
-  email: string;
-  position: string;
-  password: string;
-  role: Role;
+    id: number;
+    username: string;
+    email: string;
+    position: string;
+    password: string;
+    role: Role;
 }
 
 export interface ConstructionProject {
-  id: number;
-  name: string;
-  coordinates: [number, number][]; 
-  users: User[];
+    id: number;
+    name: string;
+    description: string; 
+    users: User[];
+    constractorId: number;
+    supervisionId: number;
+}
+
+export interface Coordinates {
+    id: number;
+    project_id: number;
+    coordinate: [number, number][];
 }
 
 export interface Post {
-  id: number;
-  body: string;
-  object: ConstructionProject;
-  author: User;
+    id: number;
+    title: string;
+    created_at: string;
+    content: string;
+    files: File;
+    object: ConstructionProject;
+    author: User;
+}
+
+export interface File {
+    id: number;
+    post_id: number;
+    path: string;
 }
 
 export interface LoginRequest {
-  email: string; 
-  password: string;
+    email: string; 
+    password: string;
 }
 
 export interface LoginResponse {
-  token: string;
-  refreshToken: string;
-  user: User;
+    token: string;
+    refreshToken: string;
+    user: User;
 }
 
 export interface RefreshTokenRequest {
-  refreshToken: string;
+    refreshToken: string;
 }
 
 export interface RefreshTokenResponse {
-  token: string;
+    token: string;
 }
 
 export interface CreateProjectRequest {
-  name: string;
-  coordinates: [number, number][]; 
-  users: number[]; 
+    name: string;
+    coordinates: [number, number][]; 
+    users: number[]; 
+    description?: string;
+    constractorId: number;
+    supervisionId: number;
+}
+
+export interface CreatePostRequest {
+    title: string;
+    content: string;
+    objectId: number; 
+    authorId: number; 
 }
 
 export interface ApiResponse<T = unknown> {
-  data: T;
-  message?: string;
-  status: number;
+    data: T;
+    message?: string;
+    status: number;
+}
+
+export interface Material {
+    id: number;
+    name: string;
+    quantity: number;
+    unit: string;
+    projectId: number;
+    qualityDocumentUrl?: string;
+    ttnDocumentUrl?: string;
+}
+
+export interface Task {
+    id: number;
+    projectId: number;
+    title: string;
+    description: string;
+    assignedTo: number;
+    status: 'pending' | 'in_progress' | 'completed' | 'rejected';
+    deadline?: string;
+    createdAt: string;
+    coordinates: [number, number];
+}
+
+export interface Issue {
+    id: number;
+    projectId: number;
+    title: string;
+    description: string;
+    createdBy: number;
+    status: 'open' | 'in_progress' | 'resolved';
+    severity: 'low' | 'medium' | 'high' | 'critical';
+    deadline?: string;
+    createdAt: string;
+    coordinates: [number, number];
 }
