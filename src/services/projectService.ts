@@ -1,5 +1,5 @@
 import api from "./api";
-import { type ConstructionProject, type CreateProjectRequest, type ApiResponse, type Coordinates } from './types';
+import { type ConstructionProject, type CreateProjectRequest, type ApiResponse } from './types';
 
 class ProjectService {
     // GET-запрос - получение всех проектов
@@ -51,20 +51,23 @@ class ProjectService {
             throw error;
         }
     }
-    // GET-запрос - получение координат проекта
-    async getProjectCoordinates(id: number): Promise<Coordinates> {
+    // GET-запрос - получение координат проекта 
+    async getProjectCoordinates(id: number): Promise<[number, number][]> {
         try {
-            const res = await api.get<ApiResponse<Coordinates>>(`/coordinates?project_id=${id}`);
-            return res.data.data;
+            const project = await this.getProjectById(id);
+            return project.coordinates; 
         } catch (error) {
             console.error('Error fetching project coordinates:', error);
             throw error;
         }
     }
-    // PUT
-    async updateProjectCoordinates(pId: number, coordinates: [number, number][]): Promise<Coordinates> {
+    // PUT-запрос - обновление координат проекта 
+    async updateProjectCoordinates(projectId: number, coordinates: [number, number][]): Promise<ConstructionProject> {
         try {
-            const res = await api.put<ApiResponse<Coordinates>>(`/coordinates/${pId}`, { coordinate: coordinates });
+            // Обновляем только координаты проекта
+            const res = await api.put<ApiResponse<ConstructionProject>>(`/projects/${projectId}`, { 
+                coordinates: coordinates 
+            });
             return res.data.data;
         } catch (error) {
             console.error('Error updating project coordinates: ', error);

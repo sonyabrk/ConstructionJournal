@@ -17,14 +17,9 @@ export interface ConstructionProject {
     name: string;
     description: string; 
     users: User[];
-    constractorId: number;
-    supervisionId: number;
-}
-
-export interface Coordinates {
-    id: number;
-    project_id: number;
-    coordinate: [number, number][];
+    constractor: number;
+    supervision: number;
+    coordinates: [number, number][];
 }
 
 export interface Post {
