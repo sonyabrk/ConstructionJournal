@@ -11,14 +11,12 @@ class PostService {
             if (addLocation) {
                 try {
                     const userCoords = await geoService.getCurrentPosition();
-                    // Добавляем координаты к данным поста, если API поддерживает
                     finalPostData = { 
                         ...postData, 
-                        coordinates: userCoords // предполагая, что API принимает coordinates
+                        coordinates: userCoords 
                     };
                 } catch (error) {
                     console.warn('Could not get user location:', error);
-                    // Продолжаем без геолокации
                 }
             }
             
@@ -27,7 +25,6 @@ class PostService {
         } catch (error) {
             console.error('Error creating post:', error);
             
-            // Сохраняем в оффлайн-очередь при ошибке сети
             if (!navigator.onLine) {
                 await offlineService.saveAction('CREATE_POST', postData);
                 throw new Error('Post saved for offline synchronization');
@@ -37,7 +34,6 @@ class PostService {
         }
     }
 
-    // Остальные методы остаются без изменений
     async getProjectPosts(projectId: number): Promise<Post[]> {
         try {
             const res = await api.get<ApiResponse<Post[]>>(`/posts?projectId=${projectId}`);

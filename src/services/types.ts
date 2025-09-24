@@ -65,6 +65,7 @@ export interface CreatePostRequest {
     content: string;
     object: number; 
     author: number; 
+    coordinates: [number, number]; 
 }
 
 export interface ApiResponse<T = unknown> {
