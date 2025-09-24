@@ -6,6 +6,17 @@ export interface User {
     password: string;
 }
 
+export interface Constractor {
+    id: number;
+    name: string;
+}
+
+export interface Supervision {
+    id: number;
+    name: string;
+    user: User;
+}
+
 export interface ConstructionProject {
     id: number;
     name: string;
@@ -14,6 +25,7 @@ export interface ConstructionProject {
     constractor: number;
     supervision: number;
     coordinates: [number, number][];
+    status?: 'active' | 'completed' | 'planned';
 }
 
 export interface Post {
