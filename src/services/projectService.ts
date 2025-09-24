@@ -1,11 +1,12 @@
 import api from "./api";
 import { type ConstructionProject, type CreateProjectRequest, type ApiResponse } from './types';
+import { geoService } from "./geoService";
 
 class ProjectService {
     // GET-запрос - получение всех проектов
     async getProjects(): Promise<ConstructionProject[]> {
         try {
-            const res = await api.get<ApiResponse<ConstructionProject[]>>('/projects');
+            const res = await api.get<ApiResponse<ConstructionProject[]>>('/objects');
             return res.data.data;
         } catch (error) {
             console.error('Error fetching projects: ', error);
@@ -15,7 +16,7 @@ class ProjectService {
     // GET-запрос - получение одного проекта по айди
     async getProjectById(id: number): Promise<ConstructionProject>{
         try {
-            const res = await api.get<ApiResponse<ConstructionProject>>(`/projects/${id}`);
+            const res = await api.get<ApiResponse<ConstructionProject>>(`/objects/${id}`);
             return res.data.data;
         } catch (error) {
             console.error('Error fetching project: ', error);
@@ -25,7 +26,7 @@ class ProjectService {
     // POST-запрос - создание нового проекта
     async createProject(projectData: CreateProjectRequest): Promise<ConstructionProject> {
         try {
-            const res = await api.post<ApiResponse<ConstructionProject>>('/projects',projectData);
+            const res = await api.post<ApiResponse<ConstructionProject>>('/objects',projectData);
             return res.data.data;
         } catch (error) {
             console.error('Error creating project: ', error);
@@ -35,7 +36,7 @@ class ProjectService {
     // PUT-запрос - обновление уже существующего проекта
     async updateProject(id: number, projectData: Partial<ConstructionProject>): Promise<ConstructionProject> {
         try {
-            const res = await api.put<ApiResponse<ConstructionProject>>(`/projects/${id}`, projectData);
+            const res = await api.put<ApiResponse<ConstructionProject>>(`/objects/${id}`, projectData);
             return res.data.data;
         } catch (error) {
             console.error('Error updating project: ', error);
@@ -45,7 +46,7 @@ class ProjectService {
     // DELETE-запрос - удаление проекта
     async deleteProject(id: number): Promise<void> {
         try {
-            await api.delete(`/projects/${id}`);
+            await api.delete(`/objects/${id}`);
         } catch (error) {
             console.error('Error deleting project: ', error);
             throw error;
@@ -65,13 +66,39 @@ class ProjectService {
     async updateProjectCoordinates(projectId: number, coordinates: [number, number][]): Promise<ConstructionProject> {
         try {
             // Обновляем только координаты проекта
-            const res = await api.put<ApiResponse<ConstructionProject>>(`/projects/${projectId}`, { 
+            const res = await api.put<ApiResponse<ConstructionProject>>(`/objects/${projectId}`, { 
                 coordinates: coordinates 
             });
             return res.data.data;
         } catch (error) {
             console.error('Error updating project coordinates: ', error);
             throw error;
+        }
+    }
+    // проверка (находится ли пользователь на территории проекта)
+    async isUserOnProject(projectId: number): Promise<boolean> {
+        try {
+            const project = await this.getProjectById(projectId);
+            const userCoords = await geoService.getCurrentPosition();
+            
+            return geoService.isPointInPolygon(userCoords, project.coordinates);
+        } catch (error) {
+            console.error('Error checking user location:', error);
+            return false;
+        }
+    }
+
+    // получение расстояния от пользователя до проекта
+    async getDistanceToProject(projectId: number): Promise<number> {
+        try {
+            const project = await this.getProjectById(projectId);
+            const userCoords = await geoService.getCurrentPosition();
+            
+            const projectCenter = project.coordinates[0];
+            return geoService.calculateDistance(userCoords, projectCenter);
+        } catch (error) {
+            console.error('Error calculating distance:', error);
+            return -1;
         }
     }
 }

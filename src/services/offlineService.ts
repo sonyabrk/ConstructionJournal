@@ -70,7 +70,7 @@ class OfflineService {
         localStorage.setItem('pendingActions', JSON.stringify(this.pendingActions));
     }
 
-    isOnLine(): boolean {
+    isOnline(): boolean {
         return navigator.onLine;
     }
 }
