@@ -1,15 +1,9 @@
-export interface Role {
-    id: number;
-    name: 'constractor' | 'supervision' | 'inspector' | 'developer' | 'admin' | 'worker';
-}
-
 export interface User {
     id: number;
     username: string;
     email: string;
     position: string;
     password: string;
-    role: Role;
 }
 
 export interface ConstructionProject {
@@ -69,8 +63,8 @@ export interface CreateProjectRequest {
 export interface CreatePostRequest {
     title: string;
     content: string;
-    objectId: number; 
-    authorId: number; 
+    object: number; 
+    author: number; 
 }
 
 export interface ApiResponse<T = unknown> {
