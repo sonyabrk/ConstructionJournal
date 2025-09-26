@@ -16,7 +16,7 @@ const AuthPage = () => {
 
         try {
             await authService.login(credentials);
-            navigate('/dashboard', { replace: true });  //// !!!!!!!!!!!!!!!не заыбыть исправить ссылку
+            navigate('/objects', { replace: true });  
         } catch (error) {
             setError(getErrorMessage(error));
         } finally {

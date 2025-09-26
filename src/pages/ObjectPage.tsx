@@ -51,8 +51,7 @@ const ObjectsPage = () => {
 
         fetchData();
     }, []);
-
-    const filteredProjects = projects.filter(project => {
+    const filteredProjects = (projects || []).filter(project => {
         const matchesSearch = project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             project.description.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesStatus = statusFilter === 'all' || project.status === statusFilter;
