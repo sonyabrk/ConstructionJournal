@@ -11,21 +11,19 @@ class AuthService {
     // метод входа пользователя
     async login(credentials: LoginRequest): Promise<LoginResponse> {
          try {
-            const res = await api.post<LoginResponse>('/auth/login', credentials);
+            const res = await api.post<LoginResponse>('/auth', credentials);
             
-            if (!res.data.token || !res.data.user) {
-                throw new Error('Invalid server response: missing token or user data');
+            if (!res) {
+                throw new Error('Invalid server response: missing user data or token');
             }
             
-            // проверка, что пользователь действительно авторизован
-            const { token, user } = res.data;
+            const { user, token, refreshToken } = res.data;
             
-            // доп. проверка данных пользователя
-            if (!user.id || !user.email) {
-                throw new Error('Invalid user data in response');
-            }
-
+            // Сохраняем токены
             this.setToken(token);
+            if (refreshToken) {
+                this.setRefreshToken(refreshToken);
+            }
             this.setCurrentUser(user);
 
             return res.data;

@@ -6,10 +6,10 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://ecxrmp-128-71-101-249.ru.tuna.am',
+        target: 'http://89.208.14.230:8080',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '/authhh')
+        rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
   }

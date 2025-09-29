@@ -1,4 +1,4 @@
-import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse, AxiosError, type InternalAxiosRequestConfig } from 'axios';
+import axios, { type AxiosInstance, type AxiosResponse, AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import { authService } from './authService';
 
 // адрес сервера (берется из переменных окружения или используется значение по умолчанию)
@@ -43,15 +43,17 @@ api.interceptors.response.use(
         if (error.code === 'ERR_NETWORK') {
             console.error('Network error: no connection to server');
         }
-        // получение оригинального запроса и добавление флага _retry
-        const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
+        
+        const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+        
         // при ошибке 401 (не авторизирован) и это не повторный запрос
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
             try {
-                // попытка обновления токена
+                // Пытаемся обновить токен
                 const refreshed = await authService.refreshToken();
                 if (refreshed) {
+                    // Если токен обновлен, повторяем оригинальный запрос
                     return api(originalRequest);
                 }
             } catch (refreshError) {

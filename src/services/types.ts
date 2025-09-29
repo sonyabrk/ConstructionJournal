@@ -1,8 +1,8 @@
 export interface User {
-    id: number;
-    username: string;
+    id?: number;
+    username?: string;
     email: string;
-    position: string;
+    position?: string;
     password: string;
 }
 
@@ -52,6 +52,7 @@ export interface LoginRequest {
 export interface LoginResponse {
     token: string;
     user: User;
+    refreshToken?: string;
 }
 
 export interface RefreshTokenRequest {
@@ -60,6 +61,7 @@ export interface RefreshTokenRequest {
 
 export interface RefreshTokenResponse {
     token: string;
+    refreshToken?: string;
 }
 
 export interface CreateProjectRequest {
