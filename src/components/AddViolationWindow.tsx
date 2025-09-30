@@ -65,7 +65,7 @@ const AddViolationForm: React.FC = () => {
                     <div className="date-fields">
                         <div className="date-field">
                             <label htmlFor="start-date">
-                                <strong>C:</strong>
+                                <strong>С:</strong>
                             </label>
                             <input
                                 id="start-date"
@@ -77,7 +77,7 @@ const AddViolationForm: React.FC = () => {
                         </div>
                         <div className="date-field">
                             <label htmlFor="end-date">
-                                <strong>no:</strong>
+                                <strong>по:</strong>
                             </label>
                             <input
                                 id="end-date"
