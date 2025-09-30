@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import ObjectCard from '../components/ObjectCard';
+import ScanBtn from '../assets/scaner.svg';
+import FilterBtn from '../assets/filter.svg';
 import { type ConstructionProject } from '../services/types';
 import { projectService } from '../services/projectService';
+import './ObjectPage.scss';
+import './reset.scss';
 
 const ObjectsPage = () => {
     const [projects, setProjects] = useState<ConstructionProject[]>([]);
@@ -62,27 +66,31 @@ const ObjectsPage = () => {
         <div className="allObjects">
             <Header />
             <div className="container mx-auto px-4 py-6">
-                <h1 className="myObjects">Мои объекты</h1>
+                <div className='titleAndActionsContainer'>
+                    <h1 className="myObjects">Мои объекты</h1>
 
-                <div className="searchAndActions">
-                    <div className="searchObject">
-                        <input
-                            type="text"
-                            placeholder="поиск объекта..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
+                    <div className="searchAndActions">
+                        <div className="searchObject">
+                            <input
+                                type="text"
+                                placeholder="Поиск объекта..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </div>
+
+                        <button
+                            onClick={() => console.log('Сканирование...')}
+                            className="scanBtn"
+                        ><img src={ScanBtn} alt="Сканер" width="30" height="30" />
+                        </button>
+
+                        <button
+                            onClick={() => setFilterActive(!filterActive)}
+                            className="filterBtn"
+                        ><img src={FilterBtn} alt="Фильтр" width="30" height="30" />
+                        </button>
                     </div>
-
-                    <button
-                        onClick={() => console.log('Сканирование...')}
-                        className="scanBtn"
-                    >Сканер</button>
-
-                    <button
-                        onClick={() => setFilterActive(!filterActive)}
-                        className="filterBtn"
-                    >Фильтр</button>
                 </div>
 
                 {filterActive && (

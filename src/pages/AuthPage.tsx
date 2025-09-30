@@ -3,7 +3,7 @@ import { authService } from "../services/authService";
 import { useNavigate } from "react-router-dom";
 import { type ApiError } from "../services/apiError";
 import "./AuthPage.scss";
-
+import './reset.scss';
 
 const AuthPage = () => {
     const [credentials, setCredentials] = useState({ email: '', password: '' });

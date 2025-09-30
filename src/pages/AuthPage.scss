@@ -1,4 +1,4 @@
-@import 'reset.scss';
+@use 'reset.scss';
 
 $primary-color: #87786F;
 $hover-color: #63564E;
@@ -50,7 +50,7 @@ body {
         input {
             margin-top: 7px;
             padding-inline: 10px;
-            background-color: #FFF;
+            background-color: $default-color;
             color:#000;
             height: 50px;
             border: #000, solid, 2px;

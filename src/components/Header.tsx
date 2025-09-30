@@ -5,7 +5,7 @@ function Header() {
         <>
             <div className="header">
                 <a href="/" className="headerProfile">
-                    <img src={profileSvg} alt="Профиль"/>
+                    <img className="headerProfileImg" src={profileSvg} alt="Профиль"/>
                 </a>
                 <p className="headerJournal">Электронный журнал</p>
             </div>

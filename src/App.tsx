@@ -6,13 +6,14 @@ import './App.css'
 function App() {
 
   return (
-    <Router>
+    <ObjectsPage />
+    /*<Router>
       <Routes>
         <Route path="/" element={<Navigate to="/auth" replace />} />
         <Route path="/auth" element={<AuthPage />}/>
         <Route path="/objects" element={<ObjectsPage />}/>
       </Routes>
-    </Router>
+    </Router>*/
   );
 }
 
