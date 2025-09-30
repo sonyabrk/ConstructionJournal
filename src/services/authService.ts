@@ -13,7 +13,7 @@ class AuthService {
          try {
             const res = await api.post<LoginResponse>('/auth', credentials);
             
-            if (!res) {
+            if (!res.data.user || !res.data.token) {
                 throw new Error('Invalid server response: missing user data or token');
             }
             
