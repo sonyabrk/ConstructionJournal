@@ -10,23 +10,24 @@ const LaboratorySelectionWindow: React.FC = () => {
     };
 
     return (
-        <div>
-            <h1>Инициирование лабораторного отбора</h1>
+        <div className="laboratory-selection">
+            <h1 className="laboratory-selection__title">Инициирование лабораторного отбора</h1>
 
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <h2>Материал</h2>
+            <form onSubmit={handleSubmit} className="laboratory-selection__form">
+                <div className="laboratory-selection__section">
+                    <h2 className="laboratory-selection__section-title">Материал</h2>
                     <input
                         type="text"
                         value={material}
                         onChange={(e) => setMaterial(e.target.value)}
                         placeholder="Введите материал"
+                        className="laboratory-selection__input"
                     />
                 </div>
 
-                <hr />
+                <hr className="laboratory-selection__separator" />
 
-                <button type="submit">
+                <button type="submit" className="laboratory-selection__submit-button">
                     Инициировать
                 </button>
             </form>
