@@ -8,30 +8,33 @@ $default-color: #FFF;
 $defoult-border-redius: 10px;
 
 body {
-    background-color: $default-color;
+    background-color: $default-color !important;
     padding: 0px;
     margin: 0px;
-    
+
 }
 
 .allObjects {
     .container {
         margin: 40px;
+
         .titleAndActionsContainer {
             display: flex;
             justify-content: space-between;
             align-items: center;
             gap: 20px;
+
             .myObjects {
                 text-align: left;
                 font-weight: 700;
                 font-size: clamp(1.3rem, 2.6vw, 1.7rem);
             }
-        
+
             .searchAndActions {
                 display: flex;
                 align-items: center;
                 gap: 20px;
+
                 input {
                     width: clamp(100px, 20vw, 270px);
                     height: 30px;
@@ -44,7 +47,7 @@ body {
                     animation: none !important;
                     transform: none !important;
                 }
-                
+
                 input:focus {
                     outline: none !important;
                     box-shadow: none !important;
@@ -52,17 +55,20 @@ body {
                 }
             }
         }
+
         .textIfNot {
             margin-block: 30px;
             font-size: clamp(1rem, 2.1vw, 1.3rem);
         }
-        
+
     }
+
     .mb-6 {
         .flex {
             display: flex;
             justify-content: end;
             margin-block: 10px;
+
             select {
                 border: 2px solid #000;
                 border-radius: $defoult-border-redius;
@@ -74,10 +80,8 @@ body {
                 outline: none;
                 transition: all 0.2s ease;
                 min-width: 200px;
-                
+
             }
-            
-            
         }
     }
 }
@@ -87,6 +91,7 @@ body {
 @media screen and (max-width: 400px) {
     .container {
         margin: 20px;
+
         .titleAndActionsContainer {
             .searchAndActions {
                 gap: 15px;
