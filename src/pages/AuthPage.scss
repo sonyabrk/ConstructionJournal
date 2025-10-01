@@ -7,20 +7,21 @@ $defoult-border-redius: 10px;
 
 body {
     min-height: 100vh;
-    background-color: $primary-color;
+    min-width: 100vw;
+    background-color: $primary-color !important;
     font-family: 'Segoe UI',
         Tahoma,
         Geneva,
         Verdana,
         sans-serif;
-    
+
     color: #000;
 }
 
 .login-form {
     display: grid;
     flex-wrap: nowrap;
-    min-width: 50vw;
+    width: clamp(300px, 50vw, 600px);
     row-gap: 10px;
     background-color: $default-color;
     position: absolute;
@@ -28,30 +29,35 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     padding-inline: 70px;
-    
     border-radius: $defoult-border-redius;
+
     p {
         margin-top: 50px;
         margin-bottom: 70px;
         font-size: 30px;
         font-weight: 700;
+        text-align: center;
     }
+
     .authGroup {
         display: grid;
         align-items: center;
         flex-wrap: wrap;
-        
+
         label {
             font-size: 18px;
             display: block;
             width: 70px;
             text-align: left;
         }
+
         input {
             margin-top: 7px;
             padding-inline: 10px;
+            width: clamp(200px, 100%, 500px);
+            font-size: 3vh;
             background-color: $default-color;
-            color:#000;
+            color: #000;
             height: 50px;
             border: #000, solid, 2px;
             border-radius: $defoult-border-redius;
@@ -59,12 +65,14 @@ body {
             animation: none !important;
             transform: none !important;
         }
+
         input:focus {
             outline: none !important;
             box-shadow: none !important;
             border-color: inherit !important;
         }
     }
+
     button {
         margin-bottom: 50px;
         margin-top: 30px;
@@ -76,20 +84,19 @@ body {
         font-weight: 600;
         font-size: 20px;
         transition: all 0.3s ease;
-        
+        text-align: center;
     }
+
     button:hover {
         background-color: $hover-color;
     }
 }
 
 @media screen and (max-width: 768px) {
-    .login-form{
-        p {margin-bottom: 30px;}
+    .login-form {
+        padding-inline: 40px;
+        p {
+            margin-bottom: 30px;
+        }
     }
 }
-
-
-
-
-
