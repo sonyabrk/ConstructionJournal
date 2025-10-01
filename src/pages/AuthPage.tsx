@@ -100,6 +100,7 @@
 import { useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
+import './AuthPage.scss';
 
 const AuthPage = () => {
     const [email, setEmail] = useState<string>('');
@@ -136,45 +137,43 @@ const AuthPage = () => {
     };
 
     return (
-        <div className="auth-container">
-            <form onSubmit={handleSubmit} className="auth-form">
-                <h2>Вход в систему</h2>
-                
-                {error && <div className="error-message">{error}</div>}
-                
-                <div className="form-group">
-                    <label htmlFor="email">Email:</label>
-                    <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        disabled={loading}
-                    />
-                </div>
-                
-                <div className="form-group">
-                    <label htmlFor="password">Пароль:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        disabled={loading}
-                    />
-                </div>
-                
-                <button 
-                    type="submit" 
+        <form onSubmit={handleSubmit} className="login-form">
+            <p>Вход в систему</p>
+            
+            {error && <div className="error-message">{error}</div>}
+            
+            <div className="authGroup">
+                <label htmlFor="email">Логин:</label>
+                <input
+                    type="email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
                     disabled={loading}
-                    className="submit-button"
-                >
-                    {loading ? 'Вход...' : 'Войти'}
-                </button>
-            </form>
-        </div>
+                />
+            </div>
+            
+            <div className="authGroup">
+                <label htmlFor="password">Пароль:</label>
+                <input
+                    type="password"
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    disabled={loading}
+                />
+            </div>
+            
+            <button 
+                type="submit" 
+                disabled={loading}
+                className="authEnterBtn"
+            >
+                {loading ? 'Вход...' : 'Войти'}
+            </button>
+        </form>
     );
 };
 
