@@ -2,6 +2,8 @@ import { useState } from "react";
 import { authService } from "../services/authService";
 import { useNavigate } from "react-router-dom";
 import { type ApiError } from "../services/apiError";
+import "./AuthPage.scss";
+import './reset.scss';
 
 const AuthPage = () => {
     const [credentials, setCredentials] = useState({ email: '', password: '' });
@@ -51,6 +53,7 @@ const AuthPage = () => {
 
     return (
         <form onSubmit={handleSubmit} className="login-form">
+            <p>Вход</p>
             <div className="authGroup">
                 <label htmlFor="email">Логин:</label>
                 <input
