@@ -6,7 +6,7 @@ class ProjectService {
     // GET-запрос - получение всех проектов
     async getProjects(): Promise<ConstructionProject[]> {
         try {
-            const res = await api.get<ApiResponse<ConstructionProject[]>>('/objects');
+            const res = await api.get<ApiResponse<ConstructionProject[]>>('/objects/my_objects/');
             return res.data.data;
         } catch (error) {
             console.error('Error fetching projects: ', error);
@@ -26,7 +26,7 @@ class ProjectService {
     // POST-запрос - создание нового проекта
     async createProject(projectData: CreateProjectRequest): Promise<ConstructionProject> {
         try {
-            const res = await api.post<ApiResponse<ConstructionProject>>('/objects',projectData);
+            const res = await api.post<ApiResponse<ConstructionProject>>('/objects/my_objects/',projectData);
             return res.data.data;
         } catch (error) {
             console.error('Error creating project: ', error);
@@ -46,7 +46,7 @@ class ProjectService {
     // DELETE-запрос - удаление проекта
     async deleteProject(id: number): Promise<void> {
         try {
-            await api.delete(`/objects/${id}`);
+            await api.delete(`/objects/my_objects/${id}`);
         } catch (error) {
             console.error('Error deleting project: ', error);
             throw error;
@@ -66,7 +66,7 @@ class ProjectService {
     async updateProjectCoordinates(projectId: number, coordinates: [number, number][]): Promise<ConstructionProject> {
         try {
             // Обновляем только координаты проекта
-            const res = await api.put<ApiResponse<ConstructionProject>>(`/objects/${projectId}`, { 
+            const res = await api.put<ApiResponse<ConstructionProject>>(`/objects/my_objects/${projectId}`, { 
                 coordinates: coordinates 
             });
             return res.data.data;

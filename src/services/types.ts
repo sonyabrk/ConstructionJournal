@@ -1,10 +1,10 @@
-export interface User {
-    id?: number;
-    username?: string;
-    email: string;
-    position?: string;
-    password: string;
-}
+// export interface User {
+//     id?: number;
+//     username?: string;
+//     email: string;
+//     position?: string;
+//     password: string;
+// }
 
 export interface Constractor {
     id: number;
@@ -18,12 +18,22 @@ export interface Supervision {
 }
 
 export interface ConstructionProject {
-    id: number;
+    id?: number; 
     name: string;
     description: string; 
-    users: User[];
-    constractor: number;
-    supervision: number;
+    users?: User[]; 
+    constractor?: number; 
+    supervision?: number; 
+    responsibleContractor?: { 
+        email: string;
+        position: string;
+        username: string;
+    };
+    responsibleSupervision?: { 
+        email: string;
+        position: string;
+        username: string;
+    };
     coordinates: [number, number][];
     status?: 'active' | 'completed' | 'planned';
 }
@@ -42,17 +52,6 @@ export interface File {
     id: number;
     post_id: number;
     path: string;
-}
-
-export interface LoginRequest {
-    email: string; 
-    password: string;
-}
-
-export interface LoginResponse {
-    token: string;
-    user: User;
-    refreshToken?: string;
 }
 
 export interface RefreshTokenRequest {
@@ -120,4 +119,22 @@ export interface Issue {
     deadline?: string;
     createdAt: string;
     coordinates: [number, number];
+}
+
+export interface User {
+    id?: number;
+    username?: string;
+    email: string;
+    position?: string;
+}
+
+export interface LoginRequest {
+    email: string; 
+    password: string;
+}
+
+export interface LoginResponse {
+    token: string;
+    user?: User;
+    refreshToken?: string;
 }
