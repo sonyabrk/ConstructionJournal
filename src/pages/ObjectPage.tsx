@@ -22,30 +22,6 @@ const ObjectsPage = () => {
                 const projectsData = await projectService.getProjects();
                 setProjects(projectsData);
                 
-                // const mockProjects: ConstructionProject[] = [
-                //     {
-                //         id: 1,
-                //         name: "ЖК Комфорт",
-                //         description: "Многоэтажный жилой комплекс",
-                //         users: [],
-                //         constractor: 1,
-                //         supervision: 1,
-                //         coordinates: [[55.7558, 37.6176]],
-                //         status: 'active'
-                //     },
-                //     {
-                //         id: 2,
-                //         name: "Бизнес-центр Северный",
-                //         description: "Офисное здание класса А",
-                //         users: [],
-                //         constractor: 2,
-                //         supervision: 2,
-                //         coordinates: [[55.7517, 37.6178]],
-                //         status: 'planned'
-                //     }
-                // ];
-                // setProjects(mockProjects);
-                
             } catch (error) {
                 console.error('Ошибка загрузки данных:', error);
             } finally {
