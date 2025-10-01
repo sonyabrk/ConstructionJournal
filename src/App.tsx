@@ -32,8 +32,7 @@ function App() {
   }
 
   return (
-    <ObjectsPage />
-    /*<Router>
+    <Router>
       <Routes>
         <Route 
           path="/" 
@@ -56,7 +55,7 @@ function App() {
           } 
         />
       </Routes>
-    </Router>*/
+    </Router>
   );
 }
 
