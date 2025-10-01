@@ -1,0 +1,68 @@
+@use '../pages/reset.scss';
+
+$primary-color: #87786F;
+$hover-color: #63564E;
+
+.mainObjectCard {
+    width: auto;
+    border: 2px solid #000;
+    border-radius: 10px;
+    padding: 18px;
+    background: white;
+    font-family: 'Segoe UI',
+        Tahoma,
+        Geneva,
+        Verdana,
+        sans-serif;
+
+    .nameObject {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 14px;
+        color: #000;
+    }
+
+    .infoObject {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-block: 16px;
+
+        >div {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        
+    }
+
+    .objectDetailsBtn {
+        background: $primary-color;
+        color: #000;
+        border: none;
+        border-radius: 10px;
+        padding: 8px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 98%;
+
+        &:hover {
+            background: $hover-color;
+        }
+    }
+}
+
+.flex {
+    display: flex;
+}
+
+.items-start {
+    align-items: flex-start;
+}
+
+.gap-2 {
+    gap: 8px;
+}

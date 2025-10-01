@@ -1,10 +1,11 @@
 import { type ConstructionProject } from '../services/types';
+import './ObjectCard.scss';
 
 interface ObjectCardProps {
     project: ConstructionProject;
     constractorName?: string; 
     supervisionUserName?: string; 
-    address?: string; 
+    address?: string;
 }
 
 const ObjectCard = ({ project, constractorName, supervisionUserName, address }: ObjectCardProps) => {
