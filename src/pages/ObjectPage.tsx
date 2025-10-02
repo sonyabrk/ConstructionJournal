@@ -98,15 +98,14 @@ const ObjectsPage = () => {
                                 <ObjectCard 
                                     key={project.id}
                                     project={project}
-                                    supervisionUserName={`Контроль #${project.supervision}`}
-                                    constractorName={`Подрядчик #${project.constractor}`}
-                                    address={`Координаты: ${project.coordinates[0]?.[0]?.toFixed(4)}, ${project.coordinates[0]?.[1]?.toFixed(4)}`}
                                 />
                             ))
                         ) : (
-                            <p className="textIfNot">
-                                {searchTerm ? 'Объекты по вашему запросу не найдены' : 'Нет объектов для отображения'}
-                            </p>
+                            <div className="col-span-full text-center py-8">
+                                <p className="textIfNot">
+                                    {searchTerm ? 'Объекты по вашему запросу не найдены' : 'Нет объектов для отображения'}
+                                </p>
+                            </div>
                         )}
                     </div>
                 )}

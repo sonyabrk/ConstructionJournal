@@ -87,18 +87,8 @@ const api: AxiosInstance = axios.create({
 api.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
         const token = authService.getToken();
-        
-        console.log('🔐 REQUEST INTERCEPTOR DETAILS:');
-        console.log('   URL:', config.url);
-        console.log('   Method:', config.method?.toUpperCase());
-        console.log('   Token exists:', !!token);
-        console.log('   Token length:', token?.length);
-        console.log('   Full token:', token);
-        
         if (token && config.headers) {
             config.headers.Authorization = `Bearer ${token}`;
-            console.log('   ✅ Authorization header set');
-            console.log('   🔍 Header value:', `Bearer ${token}`);
         } else {
             console.log('   ❌ No token available for request');
         }
@@ -122,14 +112,6 @@ api.interceptors.response.use(
         return response;
     },
     async (error: AxiosError) => {
-        console.error('❌ RESPONSE ERROR DETAILS:');
-        console.error('   URL:', error.config?.url);
-        console.error('   Method:', error.config?.method?.toUpperCase());
-        console.error('   Status:', error.response?.status);
-        console.error('   Status Text:', error.response?.statusText);
-        console.error('   Response Data:', error.response?.data);
-        console.error('   Request Headers:', error.config?.headers);
-        
         if (error.response?.status === 401) {
             console.log('🔄 401 Unauthorized - logging out');
             const currentToken = authService.getToken();

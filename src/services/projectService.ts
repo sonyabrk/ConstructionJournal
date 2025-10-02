@@ -13,6 +13,7 @@ class ProjectService {
             throw error;
         }
     }
+
     // GET-запрос - получение одного проекта по айди
     async getProjectById(id: number): Promise<ConstructionProject>{
         try {
@@ -53,10 +54,21 @@ class ProjectService {
         }
     }
     // GET-запрос - получение координат проекта 
+    // async getProjectCoordinates(id: number): Promise<[number, number][]> {
+    //     try {
+    //         const project = await this.getProjectById(id);
+    //         return project.coordinates; 
+    //     } catch (error) {
+    //         console.error('Error fetching project coordinates:', error);
+    //         throw error;
+    //     }
+    // }
+    // Обновите другие методы для работы с новым форматом координат
     async getProjectCoordinates(id: number): Promise<[number, number][]> {
         try {
             const project = await this.getProjectById(id);
-            return project.coordinates; 
+            // Преобразуем {x, y} в [number, number]
+            return project.coordinates.map(coord => [coord.x, coord.y]);
         } catch (error) {
             console.error('Error fetching project coordinates:', error);
             throw error;
@@ -80,8 +92,9 @@ class ProjectService {
         try {
             const project = await this.getProjectById(projectId);
             const userCoords = await geoService.getCurrentPosition();
+            const polygonCoords: [number, number][] = project.coordinates.map(coord => [coord.x, coord.y]);
             
-            return geoService.isPointInPolygon(userCoords, project.coordinates);
+            return geoService.isPointInPolygon(userCoords, polygonCoords);
         } catch (error) {
             console.error('Error checking user location:', error);
             return false;
@@ -93,12 +106,29 @@ class ProjectService {
         try {
             const project = await this.getProjectById(projectId);
             const userCoords = await geoService.getCurrentPosition();
-            
-            const projectCenter = project.coordinates[0];
+            const firstCoord = project.coordinates[0];
+            if (!firstCoord) {
+                return -1;
+            }
+            const projectCenter: [number, number] = [firstCoord.x, firstCoord.y];
             return geoService.calculateDistance(userCoords, projectCenter);
         } catch (error) {
             console.error('Error calculating distance:', error);
             return -1;
+        }
+    }
+    // В projectService.ts
+    async debugGetProjects(): Promise<unknown> {
+        try {
+            console.log('🔍 DEBUG - Отправка запроса на /objects/my_objects/');
+            const response = await api.get('/objects/my_objects/');
+            console.log('📨 DEBUG - Полный ответ:', response);
+            console.log('📊 DEBUG - Данные ответа:', response.data);
+            console.log('🔧 DEBUG - Статус:', response.status);
+            return response.data;
+        } catch (error) {
+            console.error('❌ DEBUG - Ошибка:', error);
+            throw error;
         }
     }
 }

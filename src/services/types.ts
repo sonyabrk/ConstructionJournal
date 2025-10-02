@@ -18,23 +18,24 @@ export interface Supervision {
 }
 
 export interface ConstructionProject {
-    id?: number; 
+    id?: number;
     name: string;
-    description: string; 
-    users?: User[]; 
-    constractor?: number; 
-    supervision?: number; 
-    responsibleContractor?: { 
-        email: string;
-        position: string;
+    description: string;
+    users?: User[];
+    responsibleContractor?: {
         username: string;
-    };
-    responsibleSupervision?: { 
-        email: string;
         position: string;
-        username: string;
+        email: string;
     };
-    coordinates: [number, number][];
+    responsibleSupervision?: {
+        username: string;
+        position: string;
+        email: string;
+    };
+    coordinates: Array<{
+        x: number;
+        y: number;
+    }>;
     status?: 'active' | 'completed' | 'planned';
 }
 
