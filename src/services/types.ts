@@ -84,7 +84,7 @@ export interface CreatePostRequest {
 export interface ApiResponse<T = unknown> {
     data: T;
     message?: string;
-    status: number;
+    status?: number;
 }
 
 export interface Material {

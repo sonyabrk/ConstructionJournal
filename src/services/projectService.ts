@@ -6,8 +6,8 @@ class ProjectService {
     // GET-запрос - получение всех проектов
     async getProjects(): Promise<ConstructionProject[]> {
         try {
-            const res = await api.get<ApiResponse<ConstructionProject[]>>('/objects/my_objects/');
-            return res.data.data;
+            const res = await api.get<ConstructionProject[]>('/objects/my_objects/');
+            return res.data;
         } catch (error) {
             console.error('Error fetching projects: ', error);
             throw error;

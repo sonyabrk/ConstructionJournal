@@ -11,7 +11,7 @@ class AuthService {
     // метод входа пользователя
     async login(credentials: LoginRequest): Promise<LoginResponse> {
          try {
-            const res = await api.post<{token: string}>('/auth/', credentials);
+            const res = await api.post('/auth/', credentials);
             console.log('Full response:', res);
             console.log('Response data:', res.data);
             

@@ -20,6 +20,7 @@ const ObjectsPage = () => {
             try {
                 setIsLoading(true);
                 const projectsData = await projectService.getProjects();
+                console.log(projectsData);
                 setProjects(projectsData);
                 
             } catch (error) {

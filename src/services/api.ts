@@ -80,6 +80,7 @@ const api: AxiosInstance = axios.create({
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json',
+         authorization: localStorage.getItem('authToken')
     },
 });
 
