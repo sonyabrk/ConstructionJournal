@@ -38,43 +38,45 @@ const AuthPage = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="login-form">
-            <p>Вход в систему</p>
-            
-            {error && <div className="error-message">{error}</div>}
-            
-            <div className="authGroup">
-                <label htmlFor="email">Логин:</label>
-                <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
+        <div className='bg'>
+            <form onSubmit={handleSubmit} className="login-form">
+                <p>Вход в систему</p>
+                
+                {error && <div className="error-message">{error}</div>}
+                
+                <div className="authGroup">
+                    <label htmlFor="email">Логин:</label>
+                    <input
+                        type="email"
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        disabled={loading}
+                    />
+                </div>
+                
+                <div className="authGroup">
+                    <label htmlFor="password">Пароль:</label>
+                    <input
+                        type="password"
+                        id="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        disabled={loading}
+                    />
+                </div>
+                
+                <button 
+                    type="submit" 
                     disabled={loading}
-                />
-            </div>
-            
-            <div className="authGroup">
-                <label htmlFor="password">Пароль:</label>
-                <input
-                    type="password"
-                    id="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    disabled={loading}
-                />
-            </div>
-            
-            <button 
-                type="submit" 
-                disabled={loading}
-                className="authEnterBtn"
-            >
-                {loading ? 'Вход...' : 'Войти'}
-            </button>
-        </form>
+                    className="authEnterBtn"
+                >
+                    {loading ? 'Вход...' : 'Войти'}
+                </button>
+            </form>
+        </div>
     );
 };
 

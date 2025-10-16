@@ -3,12 +3,9 @@
 $primary-color: #87786F;
 $hover-color: #63564E;
 $default-color: #FFF;
-$defoult-border-redius: 10px;
+$defoult-border-radius: 10px;
 
 body {
-    min-height: 100vh;
-    min-width: 100vw;
-    background-color: $primary-color !important;
     font-family: 'Segoe UI',
         Tahoma,
         Geneva,
@@ -16,81 +13,88 @@ body {
         sans-serif;
 
     color: #000;
-}
-
-.login-form {
-    display: grid;
-    flex-wrap: nowrap;
-    width: clamp(300px, 50vw, 600px);
-    row-gap: 10px;
-    background-color: $default-color;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding-inline: 70px;
-    border-radius: $defoult-border-redius;
-
-    p {
-        margin-top: 50px;
-        margin-bottom: 70px;
-        font-size: 30px;
-        font-weight: 700;
-        text-align: center;
-    }
-
-    .authGroup {
-        display: grid;
-        align-items: center;
-        flex-wrap: wrap;
-
-        label {
-            font-size: 18px;
-            display: block;
-            width: 70px;
-            text-align: left;
-        }
-
-        input {
-            margin-top: 7px;
-            padding-inline: 10px;
-            width: clamp(200px, 100%, 500px);
-            font-size: 3vh;
-            background-color: $default-color;
-            color: #000;
-            height: 50px;
-            border: #000, solid, 2px;
-            border-radius: $defoult-border-redius;
-            transition: none !important;
-            animation: none !important;
-            transform: none !important;
-        }
-
-        input:focus {
-            outline: none !important;
-            box-shadow: none !important;
-            border-color: inherit !important;
-        }
-    }
-
-    button {
-        margin-bottom: 50px;
-        margin-top: 30px;
-        height: 50px;
-        border: none;
-        border-radius: $defoult-border-redius;
+    .bg {
         background-color: $primary-color;
-        color: #000;
-        font-weight: 600;
-        font-size: 20px;
-        transition: all 0.3s ease;
-        text-align: center;
+        min-height: 100vh;
+        min-width: 100vw;
+        .login-form {
+            display: grid;
+            flex-wrap: nowrap;
+            width: clamp(300px, 50vw, 600px);
+            row-gap: 10px;
+            background-color: $default-color;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding-inline: 70px;
+            border-radius: $defoult-border-radius;
+    
+            p {
+                margin-top: 50px;
+                margin-bottom: 70px;
+                font-size: 30px;
+                font-weight: 700;
+                text-align: center;
+            }
+    
+            .authGroup {
+                display: grid;
+                align-items: center;
+                flex-wrap: wrap;
+    
+                label {
+                    font-size: 18px;
+                    display: block;
+                    width: 70px;
+                    text-align: left;
+                }
+    
+                input {
+                    margin-top: 7px;
+                    padding-inline: 10px;
+                    width: clamp(200px, 100%, 500px);
+                    font-size: 3vh;
+                    background-color: $default-color;
+                    color: #000;
+                    height: 50px;
+                    border: #000, solid, 2px;
+                    border-radius: $defoult-border-radius;
+                    transition: none !important;
+                    animation: none !important;
+                    transform: none !important;
+                }
+    
+                input:focus {
+                    outline: none !important;
+                    box-shadow: none !important;
+                    border-color: inherit !important;
+                }
+            }
+    
+            button {
+                margin-bottom: 50px;
+                margin-top: 30px;
+                height: 50px;
+                border: none;
+                border-radius: $defoult-border-radius;
+                background-color: $primary-color;
+                color: #000;
+                font-weight: 600;
+                font-size: 20px;
+                transition: all 0.3s ease;
+                text-align: center;
+            }
+    
+            button:hover {
+                background-color: $hover-color;
+            }
+        }
     }
-
-    button:hover {
-        background-color: $hover-color;
-    }
+    
 }
+
+
 
 @media screen and (max-width: 768px) {
     .login-form {
