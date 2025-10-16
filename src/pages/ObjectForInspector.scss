@@ -1,0 +1,133 @@
+@use 'reset.scss';
+
+$primary-color: #87786F;
+$hover-color: #63564E;
+$default-color: #FFF;
+$defoult-border-radius: 10px;
+
+body {
+    //height: 100vh;
+    font-family: 'Segoe UI',
+            Tahoma,
+            Geneva,
+            Verdana,
+            sans-serif;
+    
+    color: #000;
+    font-size: 18px;
+    .inspectorPage {
+        //height: 100vh;
+        .inspectorPage__container {
+            padding: 30px;
+            .navSection {
+                //margin-bottom: 20px;
+                .backBtn {
+                    font-size: 20px;
+                    font-weight: 500;
+                }
+            }
+            .objInfo {
+                margin-block: 20px;
+                h2 {
+                    margin-bottom: 10px;
+                    font-size: 26px;
+                    font-weight: 600;
+                }
+                .objectDescription {
+                    font-size: 18px;
+                }
+                .objectAddress {
+                    font-size: 18px;
+                }
+            }
+            .mapSection {
+                h3 {
+                    margin-bottom: 10px;
+                    font-size: 20px;
+                    font-weight: 500;
+                }
+                .mapContainer {
+                    border: #000 solid 2px;
+                    border-radius: $defoult-border-radius;
+                    margin-bottom: 20px;
+                    .leaflet-container {
+                        border-radius: $defoult-border-radius;
+                    }
+                    .leaflet-control-attribution {
+                        display: none;
+                    }
+                }
+            }
+            .responsibleSection {
+                margin-bottom: 20px;
+                .responsibleInfo {
+                    h4 {
+                        font-weight: 500;
+                        margin-block: 5px;
+                    }
+                }
+            }
+            .actionsSection {
+                margin-bottom: 20px;
+                .actBtn {
+                    //width: 100%;
+                    height: 30px;
+                    padding: 8px 20px;
+                    border: solid 2px #000;
+                    border-radius: $defoult-border-radius;
+                    font-weight: 500;
+                }
+            }
+            .scheduleSection {
+                margin-bottom: 20px;
+                h3 {
+                    margin-bottom: 10px;
+                    font-size: 20px;
+                    font-weight: 500;
+                }
+            }
+            .workCompositionSection {
+                margin-bottom: 20px;
+                .compositionBtn {
+                    //width: 100%;
+                    height: 30px;
+                    padding: 8px 20px;
+                    border: solid 2px #000;
+                    border-radius: $defoult-border-radius;
+                    font-weight: 500;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    body {
+        font-size: 16px;
+        .inspectorPage {
+            .inspectorPage__container {
+                .actionsSection {
+                    .actBtn {
+                        //width: 100%;
+                        height: 30px;
+                        padding: 6px 15px;
+                        border: solid 2px #000;
+                        border-radius: $defoult-border-radius;
+                        font-weight: 500;
+                    }
+                }
+                .workCompositionSection {
+                    .compositionBtn {
+                        //width: 100%;
+                        height: 30px;
+                        padding: 6px 15px;
+                        border: solid 2px #000;
+                        border-radius: $defoult-border-radius;
+                        font-weight: 500;
+                    }
+                }
+
+            }
+        }
+    }
+}
