@@ -20,8 +20,8 @@ export interface Supervision {
 export interface ConstructionProject {
     id?: number;
     name: string;
-    description: string;
     users?: User[];
+    description: string;
     responsibleContractor?: {
         username: string;
         position: string;

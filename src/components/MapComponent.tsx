@@ -14,7 +14,10 @@ const customIcon = new Icon({
 });
 
 interface MapComponentProps {
-    coordinate: [number, number]; 
+    coordinates: Array<{
+        x: number;
+        y: number;
+    }>;
     zoom?: number;
     height?: string;
     className?: string;
@@ -22,37 +25,42 @@ interface MapComponentProps {
 }
 
 const MapComponent = ({ 
-    coordinate, 
+    coordinates, 
     zoom = 15,
     height = '400px',
     className = '',
     popupText = 'Объект'
 }: MapComponentProps) => {
 
-    if (!coordinate || coordinate.length !== 2) {
+    if (!coordinates || coordinates.length !== 2) {
         return (
             <div className="mapNotFound">Координаты объекта не указаны</div>
         );
     }
 
+    const leafletCoordinates = coordinates.map(coord => [coord.y, coord.x] as [number, number]);
+
     return (
         <div className={className} style={{ height, width: '100%' }}>
             <MapContainer 
-            center={coordinate} 
-            zoom={zoom} 
-            style={{ height: '100%', width: '100%' }}
-            scrollWheelZoom={false}
+                center={leafletCoordinates[0]} 
+                zoom={zoom} 
+                style={{ height: '100%', width: '100%' }}
+                scrollWheelZoom={false}
             >
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
-            <Marker position={coordinate} icon={customIcon}>
-                <Popup>
-                {popupText}<br />
-                Координаты: {coordinate[0]?.toFixed(6)}, {coordinate[1]?.toFixed(6)}
-                </Popup>
-            </Marker>
+                {leafletCoordinates.map((position, index) => (
+
+                    <Marker key={index} position={position} icon={customIcon}>
+                        <Popup>
+                            {popupText}<br />
+                            Координаты: {position[0].toFixed(6)}, {position[1].toFixed(6)}
+                        </Popup>
+                    </Marker>
+                ))}
             </MapContainer>
         </div>
     );

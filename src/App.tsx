@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useState, useEffect } from 'react';
 import AuthPage from './pages/AuthPage';
 import ObjectsPage from './pages/ObjectPage';
+import ObjectForInspector from './pages/ObjectForInspector';
 import { authService } from './services/authService';
 import './App.css'
 
@@ -51,6 +52,14 @@ function App() {
           element={
             isAuthenticated ? 
             <ObjectsPage /> : 
+            <Navigate to="/auth" replace />
+          } 
+        />
+        <Route 
+          path="/objects/:projectId" 
+          element={
+            isAuthenticated ? 
+            <ObjectForInspector /> : 
             <Navigate to="/auth" replace />
           } 
         />
