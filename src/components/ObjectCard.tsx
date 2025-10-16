@@ -30,7 +30,7 @@ const ObjectCard = ({ project }: ObjectCardProps) => {
 
     const handleReviewClick = () => {
         if (project.id) {
-            navigate(`/objects/${project.id}`);
+            navigate(`/objects/${project.id}/`);
         }
     };
 
