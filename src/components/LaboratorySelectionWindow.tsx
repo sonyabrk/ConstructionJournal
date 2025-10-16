@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './LaboratorySelectionWindow.scss';
 
 const LaboratorySelectionWindow: React.FC = () => {
     const [material, setMaterial] = useState<string>('');
@@ -24,8 +25,6 @@ const LaboratorySelectionWindow: React.FC = () => {
                         className="laboratory-selection__input"
                     />
                 </div>
-
-                <hr className="laboratory-selection__separator" />
 
                 <button type="submit" className="laboratory-selection__submit-button">
                     Инициировать
