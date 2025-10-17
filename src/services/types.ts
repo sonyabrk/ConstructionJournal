@@ -20,7 +20,6 @@ export interface Supervision {
 export interface ConstructionProject {
     id?: number;
     name: string;
-    users?: User[];
     description: string;
     responsibleContractor?: {
         username: string;
@@ -37,6 +36,8 @@ export interface ConstructionProject {
         y: number;
     }>;
     status?: 'active' | 'completed' | 'planned';
+    posts?: Post[] | null; // Добавляем поле posts
+    users?: User[]; // Оставляем users, если оно используется
 }
 
 export interface Post {
@@ -44,15 +45,23 @@ export interface Post {
     title: string;
     created_at: string;
     content: string;
-    files: File;
+    files: string[]; // Измените на массив строк (пути к файлам)
     object: ConstructionProject;
     author: User;
 }
 
-export interface File {
+export interface PostFile {
     id: number;
     post_id: number;
     path: string;
+}
+
+export interface CreatePostRequest {
+    title: string;
+    content: string;
+    author: number; // ID автора
+    object: number; // ID объекта
+    files?: File[]; // Опциональный массив файлов для загрузки
 }
 
 export interface RefreshTokenRequest {

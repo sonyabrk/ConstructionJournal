@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'; 
 import { useParams, useNavigate } from 'react-router-dom';
-import { type ConstructionProject, type User } from '../services/types';
+import { type ConstructionProject, type User, type Post } from '../services/types';
 import WorkCard from '../components/WorkCard';
 import Header from "../components/Header";
 import MapComponent from '../components/MapComponent';
@@ -49,7 +49,7 @@ const ObjectForInspector = () => {
                 const projectData = await projectService.getProjectById(Number(projectId));
                 setProject(projectData);
                 
-                await checkFilesExistence();
+                //await checkFilesExistence();
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Ошибка загрузки');
             } finally {
@@ -207,10 +207,13 @@ const ObjectForInspector = () => {
                 
                 <div className="responsibleInfo">
                     <h4>Состояние объекта:</h4>
+                    
                     <span className={`status-badge status-${project.status || 'planned'}`}>
                         {project.status === 'active' && 'Активный'}
                         {project.status === 'completed' && 'Завершен'}
                         {project.status === 'planned' && 'Запланирован'}
+                        
+                        {!project.status && 'Неизвестно'}
                     </span>
                 </div>
             </section>
@@ -229,6 +232,28 @@ const ObjectForInspector = () => {
                     accept=".pdf,.doc,.docx" 
                 />
             </section>
+
+            {project.posts && project.posts.length > 0 && (
+                <section className="postsSection">
+                    <h3>Посты объекта</h3>
+                    <div className="postsContainer">
+                        {project.posts.map((post: Post) => (
+                            <div key={post.id} className="postCard">
+                                <h4>{post.title}</h4>
+                                <p>{post.content}</p>
+                                <small>Создан: {post.created_at}</small>
+                            </div>
+                        ))}
+                    </div>
+                </section>
+            )}
+
+            {project.posts && project.posts.length === 0 && (
+                <section className="postsSection">
+                    <h3>Посты объекта</h3>
+                    <p>Пока нет постов для этого объекта</p>
+                </section>
+            )}
 
             <section className="scheduleSection">
                 <h3>Сетевой график работ</h3>
