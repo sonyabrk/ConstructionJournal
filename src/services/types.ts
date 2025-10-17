@@ -1,11 +1,3 @@
-// export interface User {
-//     id?: number;
-//     username?: string;
-//     email: string;
-//     position?: string;
-//     password: string;
-// }
-
 export interface Constractor {
     id: number;
     name: string;
@@ -45,8 +37,8 @@ export interface Post {
     title: string;
     created_at: string;
     content: string;
-    files: string[]; // Измените на массив строк (пути к файлам)
-    object: ConstructionProject;
+    files: string[]; 
+    status: string;
     author: User;
 }
 
@@ -59,9 +51,9 @@ export interface PostFile {
 export interface CreatePostRequest {
     title: string;
     content: string;
-    author: number; // ID автора
-    object: number; // ID объекта
-    files?: File[]; // Опциональный массив файлов для загрузки
+    author: number; 
+    object: number; 
+    files?: File[]; 
 }
 
 export interface RefreshTokenRequest {
@@ -136,6 +128,7 @@ export interface User {
     username?: string;
     email: string;
     position?: string;
+    role: string;
 }
 
 export interface LoginRequest {

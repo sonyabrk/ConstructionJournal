@@ -104,7 +104,62 @@ const ObjectForInspector = () => {
             
         } catch (error) {
             console.error('Ошибка загрузки акта:', error);
-            alert('Ошибка загрузки акта');
+            if (error instanceof Error) {
+                if (error.message === 'ACT_ALREADY_EXISTS') {
+                    alert('Акт уже существует и не может быть заменен. Для изменений обратитесь к администратору.');
+                } else if (error.message === 'OBJECT_NOT_FOUND') {
+                    alert('Объект не найден');
+                } else {
+                    alert('Ошибка загрузки акта: ' + error.message);
+                }
+            } else {
+                alert('Ошибка загрузки акта');
+            }
+        }
+    };
+
+    const uploadWorkCompositionFile = async (file: File) => {
+        try {
+            if (!projectId) throw new Error('ID проекта не указан');
+            
+            // Проверяем, существует ли уже состав работ
+            const compositionExists = await fileService.checkWorkCompositionExists(Number(projectId));
+            
+            if (compositionExists) {
+                // Запрашиваем подтверждение на замену
+                const shouldReplace = window.confirm(
+                    'Состав работ уже существует. Хотите заменить его на новый файл?'
+                );
+                
+                if (shouldReplace) {
+                    await fileService.uploadWorkComposition(Number(projectId), file, true);
+                    alert('Состав работ успешно обновлен!');
+                } else {
+                    alert('Замена отменена');
+                    return;
+                }
+            } else {
+                await fileService.uploadWorkComposition(Number(projectId), file, false);
+                alert('Состав работ успешно загружен!');
+            }
+            
+            setHasWorkComposition(true);
+            
+        } catch (error) {
+            console.error('Ошибка загрузки состава работ:', error);
+            if (error instanceof Error) {
+                if (error.message === 'COMPOSITION_ALREADY_EXISTS') {
+                    alert('Состав работ уже существует. Используйте функцию замены.');
+                } else if (error.message === 'REPLACE_FAILED') {
+                    alert('Не удалось заменить состав работ');
+                } else if (error.message === 'OBJECT_NOT_FOUND') {
+                    alert('Объект не найден');
+                } else {
+                    alert('Ошибка загрузки состава работ: ' + error.message);
+                }
+            } else {
+                alert('Ошибка загрузки состава работ');
+            }
         }
     };
 
@@ -118,20 +173,6 @@ const ObjectForInspector = () => {
         } catch (error) {
             console.error('Ошибка скачивания акта:', error);
             alert('Ошибка скачивания акта');
-        }
-    };
-
-    const uploadWorkCompositionFile = async (file: File) => {
-        try {
-            if (!projectId) throw new Error('ID проекта не указан');
-            
-            await fileService.uploadWorkComposition(Number(projectId), file);
-            setHasWorkComposition(true);
-            alert('Состав работ успешно загружен!');
-            
-        } catch (error) {
-            console.error('Ошибка загрузки состава работ:', error);
-            alert('Ошибка загрузки состава работ');
         }
     };
 
