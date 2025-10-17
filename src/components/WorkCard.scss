@@ -1,0 +1,42 @@
+@use '../pages/reset.scss';
+
+$primary-color: #87786F;
+$hover-color: #63564E;
+$default-color: #FFF;
+$defoult-border-radius: 10px;
+
+@mixin h3-style {
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+@mixin h4-style {
+    font-weight: 500;
+}
+
+.workCard {
+    border: solid #000 2px;
+    border-radius: $defoult-border-radius;
+    padding: 20px;
+    h4 {
+        @include h4-style;
+        margin-bottom: 10px;
+    }
+    button {
+        padding: 10px;
+        border: none;
+        border-radius: $defoult-border-radius;
+        background-color: $primary-color;
+        color: #000;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    button:hover {
+        background-color: $hover-color;
+    }
+
+}
