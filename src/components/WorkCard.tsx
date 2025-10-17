@@ -1,4 +1,5 @@
 import { type User } from '../services/types';
+import './WorkCard.scss';
 
 interface WorkCardProps {
     user: User;
@@ -14,7 +15,6 @@ const WorkCard = ({ user, onReview, currentUserRole }: WorkCardProps) => {
             <h4>{user.username}</h4>
             <p>{user.position}</p>
             <p>{user.email}</p>
-            <p className="role-badge">Роль: {user.role}</p>
             
             {canEdit && (
                 <button 
