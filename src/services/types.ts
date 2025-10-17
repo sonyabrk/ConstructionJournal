@@ -130,6 +130,7 @@ export interface User {
     position?: string;
     role: string;
 }
+export type UserRole = 'ROLE_CONTRACTOR' | 'ROLE_SUPERVISION' | 'ROLE_INSPECTOR' | 'ROLE_ADMIN';
 
 export interface LoginRequest {
     email: string; 

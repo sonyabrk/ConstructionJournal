@@ -1,39 +1,31 @@
-import profileSvg from "../assets/profile.svg";
-import { type User } from "../services/types";
+import { type User } from '../services/types';
 
 interface WorkCardProps {
     user: User;
-    onReview?: (user: User) => void;
+    onReview: (user: User) => void;
+    currentUserRole?: string;
 }
 
-function WorkCard({ user, onReview }: WorkCardProps) {
-    const handleReviewClick = () => {
-        if (onReview) {
-            onReview(user);
-        }
-    };
-
+const WorkCard = ({ user, onReview, currentUserRole }: WorkCardProps) => {
+    const canEdit = currentUserRole === 'ROLE_CONTRACTOR' || currentUserRole === 'ROLE_SUPERVISION';
+    
     return (
         <div className="workCard">
-            <div className="workCardProfile">
-                <img src={profileSvg} alt="Профиль"/>
-                <div className="nameAndRole">
-                    <strong>{user.username}</strong>
-                    <span>{user.position}</span>
-                </div>
-            </div>
-            <div className="card">
-                <p className="email">Email: {user.email}</p>
-                <p className="userId">ID: {user.id}</p>
+            <h4>{user.username}</h4>
+            <p>{user.position}</p>
+            <p>{user.email}</p>
+            <p className="role-badge">Роль: {user.role}</p>
+            
+            {canEdit && (
                 <button 
-                    className="reviewBtn" 
-                    onClick={handleReviewClick}
+                    className="reviewBtn"
+                    onClick={() => onReview(user)}
                 >
-                    Обзор
-                </button> 
-            </div>
+                    Просмотр
+                </button>
+            )}
         </div>
     );
-}
+};
 
 export default WorkCard;

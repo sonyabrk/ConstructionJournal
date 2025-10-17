@@ -3,17 +3,44 @@ import Header from '../components/Header';
 import ObjectCard from '../components/ObjectCard';
 import ScanBtn from '../assets/scaner.svg';
 import FilterBtn from '../assets/filter.svg';
-import { type ConstructionProject } from '../services/types';
+import { type ConstructionProject, type User } from '../services/types';
 import { projectService } from '../services/projectService';
 import './ObjectPage.scss';
 import './reset.scss';
 
-const ObjectsPage = () => {
+interface ObjectPageProps {
+  currentUser?: User | null;
+}
+
+const ObjectPage = ({ currentUser }: ObjectPageProps) => {
     const [projects, setProjects] = useState<ConstructionProject[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterActive, setFilterActive] = useState(false);
     const [statusFilter, setStatusFilter] = useState<string>('all');
+
+    // возможности на основе роли
+    const userRole = currentUser?.role;
+    const isContractor = userRole === 'ROLE_CONTRACTOR';
+    //const isSupervision = userRole === 'ROLE_SUPERVISION';
+    const isInspector = userRole === 'ROLE_INSPECTOR';
+    //const isAdmin = userRole === 'ROLE_ADMIN';
+
+    // Определяем заголовок в зависимости от роли
+    const getPageTitle = () => {
+        switch (userRole) {
+            case 'ROLE_CONTRACTOR':
+                return 'Мои объекты';
+            case 'ROLE_SUPERVISION':
+                return 'Объекты под надзором';
+            case 'ROLE_INSPECTOR':
+                return 'Объекты для проверки';
+            case 'ROLE_ADMIN':
+                return 'Все объекты системы';
+            default:
+                return 'Объекты';
+        }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -32,6 +59,7 @@ const ObjectsPage = () => {
 
         fetchData();
     }, []);
+
     const filteredProjects = (projects || []).filter(project => {
         const matchesSearch = project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             project.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -44,7 +72,7 @@ const ObjectsPage = () => {
             <Header />
             <div className="container mx-auto px-4 py-6">
                 <div className='titleAndActionsContainer'>
-                    <h1 className="myObjects">Мои объекты</h1>
+                    <h1 className="myObjects">{getPageTitle()}</h1>
 
                     <div className="searchAndActions">
                         <div className="searchObject">
@@ -59,13 +87,15 @@ const ObjectsPage = () => {
                         <button
                             onClick={() => console.log('Сканирование...')}
                             className="scanBtn"
-                        ><img src={ScanBtn} alt="Сканер" width="30" height="30" />
+                        >
+                            <img src={ScanBtn} alt="Сканер" width="30" height="30" />
                         </button>
 
                         <button
                             onClick={() => setFilterActive(!filterActive)}
                             className="filterBtn"
-                        ><img src={FilterBtn} alt="Фильтр" width="30" height="30" />
+                        >
+                            <img src={FilterBtn} alt="Фильтр" width="30" height="30" />
                         </button>
                     </div>
                 </div>
@@ -99,6 +129,7 @@ const ObjectsPage = () => {
                                 <ObjectCard 
                                     key={project.id}
                                     project={project}
+                                    currentUserRole={userRole}
                                 />
                             ))
                         ) : (
@@ -110,9 +141,23 @@ const ObjectsPage = () => {
                         )}
                     </div>
                 )}
+
+                {/* Дополнительная информация для разных ролей */}
+                {isContractor && filteredProjects.length === 0 && !searchTerm && (
+                    <div className="role-info contractor-info">
+                        <p>У вас пока нет созданных объектов. Начните с создания нового объекта.</p>
+                        <button className="create-first-project">Создать первый объект</button>
+                    </div>
+                )}
+
+                {isInspector && filteredProjects.length === 0 && !searchTerm && (
+                    <div className="role-info inspector-info">
+                        <p>На данный момент нет объектов, назначенных для вашей проверки.</p>
+                    </div>
+                )}
             </div>
         </div>
     );
 };
 
-export default ObjectsPage;
+export default ObjectPage;

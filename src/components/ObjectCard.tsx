@@ -7,9 +7,10 @@ interface ObjectCardProps {
     constractorName?: string; 
     supervisionUserName?: string; 
     address?: string;
+    currentUserRole?: string; 
 }
 
-const ObjectCard = ({ project }: ObjectCardProps) => {
+const ObjectCard = ({ project, currentUserRole }: ObjectCardProps) => {
     const navigate = useNavigate();
     const firstCoordinate = project.coordinates.length > 0 ? project.coordinates[0] : null;
 
@@ -34,10 +35,28 @@ const ObjectCard = ({ project }: ObjectCardProps) => {
         }
     };
 
+    // ролевая информации
+    const renderRoleSpecificInfo = () => {
+        switch (currentUserRole) {
+            case 'ROLE_CONTRACTOR':
+                return <div className="role-badge contractor-badge">Ваш объект</div>;
+            case 'ROLE_SUPERVISION':
+                return <div className="role-badge supervision-badge">Под надзором</div>;
+            case 'ROLE_INSPECTOR':
+                return <div className="role-badge inspector-badge">Для проверки</div>;
+            case 'ROLE_ADMIN':
+                return <div className="role-badge admin-badge">Администрирование</div>;
+            default:
+                return null;
+        }
+    };
 
     return (
         <div className="mainObjectCard">
-            <h3 className="nameObject">{project.name}</h3>
+            <div className="card-header">
+                <h3 className="nameObject">{project.name}</h3>
+                {renderRoleSpecificInfo()}
+            </div>
 
             {project.description && (
                 <p className="descriptionObject">{project.description}</p>

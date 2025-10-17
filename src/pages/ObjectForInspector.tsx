@@ -7,12 +7,31 @@ import MapComponent from '../components/MapComponent';
 import { projectService } from '../services/projectService';
 import { fileService } from '../services/fileService';
 
-const ObjectForInspector = () => {
+interface ObjectForInspectorProps {
+  currentUser?: User | null;
+}
+
+const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
     const { projectId } = useParams<{ projectId: string }>();
     const navigate = useNavigate();
     const [project, setProject] = useState<ConstructionProject | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    
+    // роли и возможности на основе currentUser из пропсов
+    const userRole = currentUser?.role;
+    const isContractor = userRole === 'ROLE_CONTRACTOR';
+    const isSupervision = userRole === 'ROLE_SUPERVISION';
+    const isInspector = userRole === 'ROLE_INSPECTOR';
+    const isAdmin = userRole === 'ROLE_ADMIN';
+
+    // права доступа для файлов
+    const canUploadAct = isContractor || isSupervision || isAdmin;
+    const canDownloadAct = isContractor || isSupervision || isInspector || isAdmin;
+    const canUploadComposition = isContractor || isAdmin;
+    const canDownloadComposition = isContractor || isSupervision || isAdmin;
+    const canAddWorkers = isContractor || isAdmin;
+    const canViewWorkComposition = isContractor || isSupervision || isAdmin;
 
     const actFileInputRef = useRef<HTMLInputElement>(null);
     const compositionFileInputRef = useRef<HTMLInputElement>(null);
@@ -22,21 +41,26 @@ const ObjectForInspector = () => {
     const [hasAct, setHasAct] = useState<boolean>(false);
     const [hasWorkComposition, setHasWorkComposition] = useState<boolean>(false);
 
+    // Проверка существования файлов с учетом прав доступа
     const checkFilesExistence = useCallback(async () => {
         if (!projectId) return;
         
         try {
-            const [actExists, compositionExists] = await Promise.all([
-                fileService.checkActExists(Number(projectId)),
-                fileService.checkWorkCompositionExists(Number(projectId))
-            ]);
+            // Проверяем акт, если пользователь имеет права на его просмотр
+            if (canDownloadAct) {
+                const actExists = await fileService.checkActExists(Number(projectId));
+                setHasAct(actExists);
+            }
             
-            setHasAct(actExists);
-            setHasWorkComposition(compositionExists);
+            // Проверяем состав работ, если пользователь имеет права на его просмотр
+            if (canViewWorkComposition) {
+                const compositionExists = await fileService.checkWorkCompositionExists(Number(projectId));
+                setHasWorkComposition(compositionExists);
+            }
         } catch (error) {
             console.error('Ошибка проверки файлов:', error);
         }
-    }, [projectId]); 
+    }, [projectId, canDownloadAct, canViewWorkComposition]);
 
     useEffect(() => {
         const fetchProjectData = async () => {
@@ -49,7 +73,7 @@ const ObjectForInspector = () => {
                 const projectData = await projectService.getProjectById(Number(projectId));
                 setProject(projectData);
                 
-                //await checkFilesExistence();
+                await checkFilesExistence();
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Ошибка загрузки');
             } finally {
@@ -107,6 +131,8 @@ const ObjectForInspector = () => {
             if (error instanceof Error) {
                 if (error.message === 'ACT_ALREADY_EXISTS') {
                     alert('Акт уже существует и не может быть заменен. Для изменений обратитесь к администратору.');
+                } else if (error.message === 'ACCESS_DENIED') {
+                    alert('Доступ запрещен. У вас нет прав для загрузки акта.');
                 } else if (error.message === 'OBJECT_NOT_FOUND') {
                     alert('Объект не найден');
                 } else {
@@ -122,11 +148,9 @@ const ObjectForInspector = () => {
         try {
             if (!projectId) throw new Error('ID проекта не указан');
             
-            // Проверяем, существует ли уже состав работ
             const compositionExists = await fileService.checkWorkCompositionExists(Number(projectId));
             
             if (compositionExists) {
-                // Запрашиваем подтверждение на замену
                 const shouldReplace = window.confirm(
                     'Состав работ уже существует. Хотите заменить его на новый файл?'
                 );
@@ -150,6 +174,8 @@ const ObjectForInspector = () => {
             if (error instanceof Error) {
                 if (error.message === 'COMPOSITION_ALREADY_EXISTS') {
                     alert('Состав работ уже существует. Используйте функцию замены.');
+                } else if (error.message === 'ACCESS_DENIED') {
+                    alert('Доступ запрещен. У вас нет прав для загрузки состава работ.');
                 } else if (error.message === 'REPLACE_FAILED') {
                     alert('Не удалось заменить состав работ');
                 } else if (error.message === 'OBJECT_NOT_FOUND') {
@@ -172,7 +198,11 @@ const ObjectForInspector = () => {
             
         } catch (error) {
             console.error('Ошибка скачивания акта:', error);
-            alert('Ошибка скачивания акта');
+            if (error instanceof Error && error.message === 'ACCESS_DENIED') {
+                alert('Доступ запрещен. У вас нет прав для скачивания акта.');
+            } else {
+                alert('Ошибка скачивания акта');
+            }
         }
     };
 
@@ -185,12 +215,17 @@ const ObjectForInspector = () => {
             
         } catch (error) {
             console.error('Ошибка скачивания состава работ:', error);
-            alert('Ошибка скачивания состава работ');
+            if (error instanceof Error && error.message === 'ACCESS_DENIED') {
+                alert('Доступ запрещен. У вас нет прав для скачивания состава работ.');
+            } else {
+                alert('Ошибка скачивания состава работ');
+            }
         }
     };
 
     const handleAddWorker = () => {
         console.log('Добавление участника работ');
+        // логика добавления участника
     };
 
     const handleUserReview = (user: User) => {
@@ -214,7 +249,9 @@ const ObjectForInspector = () => {
                 <button 
                     className="backBtn"
                     onClick={() => navigate('/objects')}
-                > ← Назад к списку объектов </button>
+                > 
+                    ← Назад к списку объектов 
+                </button>
             </div>
 
             <section className="objInfo">
@@ -248,32 +285,37 @@ const ObjectForInspector = () => {
                 
                 <div className="responsibleInfo">
                     <h4>Состояние объекта:</h4>
-                    
                     <span className={`status-badge status-${project.status || 'planned'}`}>
                         {project.status === 'active' && 'Активный'}
                         {project.status === 'completed' && 'Завершен'}
                         {project.status === 'planned' && 'Запланирован'}
-                        
                         {!project.status && 'Неизвестно'}
                     </span>
                 </div>
             </section>
 
-            <section className="actionsSection">
-                <button className="actBtn" onClick={handleOpenAct}>
-                    {hasAct ? '📥 Скачать акт открытия объекта' : 
-                     actFile ? `✅ Акт загружен: ${actFile.name}` : '📤 Загрузить акт открытия объекта'}
-                </button>
-                
-                <input
-                    type="file"
-                    ref={actFileInputRef}
-                    onChange={handleActFileChange}
-                    style={{ display: 'none' }}
-                    accept=".pdf,.doc,.docx" 
-                />
-            </section>
+            {/* Универсальная секция акта - отображается для всех, у кого есть права */}
+            {(canUploadAct || (canDownloadAct && hasAct)) && (
+                <section className="actionsSection">
+                    <button className="actBtn" onClick={handleOpenAct}>
+                        {hasAct ? '📥 Скачать акт открытия объекта' : 
+                         actFile ? `✅ Акт загружен: ${actFile.name}` : '📤 Загрузить акт открытия объекта'}
+                    </button>
+                    
+                    {/* Поле для загрузки файла показываем только тем, у кого есть права на загрузку И если акта еще нет */}
+                    {canUploadAct && !hasAct && (
+                        <input
+                            type="file"
+                            ref={actFileInputRef}
+                            onChange={handleActFileChange}
+                            style={{ display: 'none' }}
+                            accept=".pdf,.doc,.docx" 
+                        />
+                    )}
+                </section>
+            )}
 
+            {/* Посты объекта - отображаются для всех */}
             {project.posts && project.posts.length > 0 && (
                 <section className="postsSection">
                     <h3>Посты объекта</h3>
@@ -289,13 +331,14 @@ const ObjectForInspector = () => {
                 </section>
             )}
 
-            {project.posts && project.posts.length === 0 && (
+            {(!project.posts || project.posts.length === 0) && (
                 <section className="postsSection">
                     <h3>Посты объекта</h3>
                     <p>Пока нет постов для этого объекта</p>
                 </section>
             )}
 
+            {/* Сетевой график - отображается для всех */}
             <section className="scheduleSection">
                 <h3>Сетевой график работ</h3>
                 <div className="scheduleContainer">
@@ -305,27 +348,36 @@ const ObjectForInspector = () => {
                 </div>
             </section>
 
-            <section className="workCompositionSection">
-                <button className="compositionBtn" onClick={handleShowWorkComposition}>
-                    {hasWorkComposition ? '📥 Скачать состав работ' : 
-                     compositionFile ? `✅ Состав работ загружен: ${compositionFile.name}` : '📤 Загрузить состав работ'}
-                </button>
-                
-                <input
-                    type="file"
-                    ref={compositionFileInputRef}
-                    onChange={handleCompositionFileChange}
-                    style={{ display: 'none' }}
-                    accept=".pdf,.doc,.docx,.xls,.xlsx"
-                />
-            </section>
+            {/* Секция состава работ - отображается для тех, у кого есть права */}
+            {(canUploadComposition || (canDownloadComposition && hasWorkComposition)) && (
+                <section className="workCompositionSection">
+                    <button className="compositionBtn" onClick={handleShowWorkComposition}>
+                        {hasWorkComposition ? '📥 Скачать состав работ' : 
+                         compositionFile ? `✅ Состав работ загружен: ${compositionFile.name}` : '📤 Загрузить состав работ'}
+                    </button>
+                    
+                    {/* Поле для загрузки файла показываем только тем, у кого есть права на загрузку И если состав работ еще нет */}
+                    {canUploadComposition && !hasWorkComposition && (
+                        <input
+                            type="file"
+                            ref={compositionFileInputRef}
+                            onChange={handleCompositionFileChange}
+                            style={{ display: 'none' }}
+                            accept=".pdf,.doc,.docx,.xls,.xlsx"
+                        />
+                    )}
+                </section>
+            )}
 
+            {/* Секция рабочих - отображается для всех, но кнопка добавления только для определенных ролей */}
             <section className="workersSection">
                 <div className="workersHeader">
                     <h3>Работа на строительной площадке</h3>
-                    <button className="addWorkerBtn" onClick={handleAddWorker}>
-                        + Добавить участника
-                    </button>
+                    {canAddWorkers && (
+                        <button className="addWorkerBtn" onClick={handleAddWorker}>
+                            + Добавить участника
+                        </button>
+                    )}
                 </div>
                 
                 <div className="workersGrid">
@@ -335,6 +387,7 @@ const ObjectForInspector = () => {
                                 key={user.id} 
                                 user={user}
                                 onReview={handleUserReview}
+                                currentUserRole={userRole}
                             />
                         ))
                     ) : (
@@ -342,6 +395,51 @@ const ObjectForInspector = () => {
                     )}
                 </div>
             </section>
+
+            {/* Дополнительные секции для разных ролей */}
+            {isContractor && (
+                <section className="role-specific-section contractor-tools">
+                    <h3>Инструменты подрядчика</h3>
+                    <div className="tools-grid">
+                        <button className="tool-btn">Управление материалами</button>
+                        <button className="tool-btn">Отчеты по работам</button>
+                        <button className="tool-btn">Финансовые документы</button>
+                    </div>
+                </section>
+            )}
+
+            {isSupervision && (
+                <section className="role-specific-section supervision-tools">
+                    <h3>Инструменты надзора</h3>
+                    <div className="tools-grid">
+                        <button className="tool-btn">Контроль качества</button>
+                        <button className="tool-btn">Акты приемки</button>
+                        <button className="tool-btn">Журнал работ</button>
+                    </div>
+                </section>
+            )}
+
+            {isInspector && (
+                <section className="role-specific-section inspector-tools">
+                    <h3>Инструменты инспектора</h3>
+                    <div className="tools-grid">
+                        <button className="tool-btn">Проверка документации</button>
+                        <button className="tool-btn">Акт проверки</button>
+                        <button className="tool-btn">Рекомендации</button>
+                    </div>
+                </section>
+            )}
+
+            {isAdmin && (
+                <section className="role-specific-section admin-tools">
+                    <h3>Панель администратора</h3>
+                    <div className="tools-grid">
+                        <button className="tool-btn">Управление пользователями</button>
+                        <button className="tool-btn">Настройки проекта</button>
+                        <button className="tool-btn">Системные логи</button>
+                    </div>
+                </section>
+            )}
         </div>
     );
 }

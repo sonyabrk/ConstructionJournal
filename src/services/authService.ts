@@ -21,11 +21,12 @@ class AuthService {
             
             const { token } = res.data;
             
-            const user: User = {
-                email: credentials.email,
-            };
-            
+            // Сохраняем токен
             this.setToken(token);
+            
+            // Получаем данные пользователя с эндпоинта /user/
+            const user = await this.fetchCurrentUser();
+            
             this.setCurrentUser(user);
 
             return {
@@ -40,25 +41,78 @@ class AuthService {
         }
     }
 
+    // метод получения данных текущего пользователя с /user/
+    async fetchCurrentUser(): Promise<User> {
+        try {
+            const res = await api.get<User>('/user/');
+            console.log('User data received from /user/:', res.data);
+            return res.data;
+        } catch (error) {
+            console.error('Error fetching user data from /user/:', error);
+            
+            // если запрос к /user/ не удался, пробуем альтернативные эндпоинты
+            try {
+                console.log('Trying alternative endpoints...');
+                const endpoints = ['/users/me/', '/auth/user/', '/profile/'];
+                
+                for (const endpoint of endpoints) {
+                    try {
+                        const altRes = await api.get<User>(endpoint);
+                        console.log(`User data received from ${endpoint}:`, altRes.data);
+                        return altRes.data;
+                    } catch (e) {
+                        console.log(`Endpoint ${endpoint} failed:`, e);
+                        continue;
+                    }
+                }
+                
+                throw new Error('All user endpoints failed');
+                
+            } catch (fallbackError) {
+                console.error('All user endpoints failed:', fallbackError);
+                
+                // В крайнем случае создаем временного пользователя
+                const temporaryUser: User = {
+                    email: 'unknown@email.com',
+                    role: 'ROLE_USER',
+                    username: 'Пользователь',
+                    position: 'Не указано'
+                };
+                
+                return temporaryUser;
+            }
+        }
+    }
+
     // метод обновления токена
     async refreshToken(): Promise<boolean> {
         try {
-            // получение refreshToken из localStorage
             const refreshToken = this.getRefreshToken();
             if (!refreshToken) {
                 return false;
             }
-            // формирование запроса
+            
             const req: RefreshTokenRequest = { refreshToken };
-            // отправка запроса на обновление токена
             const res = await api.post<RefreshTokenResponse>('/auth/refresh', req);
             const { token } = res.data;
             this.setToken(token);
             return true;
         } catch (error) {
             console.error('Token refresh error:', error);
-            this.logout();  // выход из системы при ошибке обновления токена
+            this.logout();
             return false;
+        }
+    }
+
+    // метод для принудительного обновления данных пользователя
+    async updateUserData(): Promise<User> {
+        try {
+            const user = await this.fetchCurrentUser();
+            this.setCurrentUser(user);
+            return user;
+        } catch (error) {
+            console.error('Error updating user data:', error);
+            throw error;
         }
     }
 
@@ -74,7 +128,7 @@ class AuthService {
         return !!this.getToken();
     }
 
-    // методы для работы с localStorage (инкапсуляция логики работы с хранилищем)
+    // методы для работы с localStorage
     getCurrentUser(): User | null {
         const userStr = localStorage.getItem('user');
         return userStr ? JSON.parse(userStr) : null;
@@ -112,6 +166,27 @@ class AuthService {
         localStorage.removeItem('refreshToken');
     }
     
+    // методы для проверки ролей
+    hasRole(role: string): boolean {
+        const user = this.getCurrentUser();
+        return user?.role === role;
+    }
+
+    isContractor(): boolean {
+        return this.hasRole('ROLE_CONTRACTOR');
+    }
+
+    isSupervision(): boolean {
+        return this.hasRole('ROLE_SUPERVISION');
+    }
+
+    isInspector(): boolean {
+        return this.hasRole('ROLE_INSPECTOR');
+    }
+
+    isAdmin(): boolean {
+        return this.hasRole('ROLE_ADMIN');
+    }
 }
 
-export const authService = new AuthService;
+export const authService = new AuthService();

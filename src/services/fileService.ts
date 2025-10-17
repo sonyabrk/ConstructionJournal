@@ -13,15 +13,23 @@ class FileService {
       formData.append('file', file);
 
       const response = await api.post<FileUploadResponse>(
-        `/objects/${objectId}/act/`, 
-        formData
+          `/objects/${objectId}/act/`, 
+          formData,
+          {
+              headers: {
+                  'Content-Type': 'multipart/form-data' 
+              }
+          }
       );
       return response.data;
-    } catch (error: unknown) {
+    }catch (error: unknown) {
       if (error instanceof Error && 'response' in error) {
         const axiosError = error as AxiosError;
         if (axiosError.response?.status === 400) {
-          throw new Error('ACT_ALREADY_EXISTS'); // Специальный код ошибки
+          throw new Error('ACT_ALREADY_EXISTS');
+        }
+        if (axiosError.response?.status === 403) {
+          throw new Error('ACCESS_DENIED');
         }
         if (axiosError.response?.status === 404) {
           throw new Error('OBJECT_NOT_FOUND');
@@ -51,6 +59,9 @@ class FileService {
         if (axiosError.response?.status === 400) {
           throw new Error(replace ? 'REPLACE_FAILED' : 'COMPOSITION_ALREADY_EXISTS');
         }
+        if (axiosError.response?.status === 403) {
+          throw new Error('ACCESS_DENIED');
+        }
         if (axiosError.response?.status === 404) {
           throw new Error('OBJECT_NOT_FOUND');
         }
@@ -65,6 +76,9 @@ class FileService {
     } catch (error: unknown) {
       if (error instanceof Error && 'response' in error) {
         const axiosError = error as AxiosError;
+        if (axiosError.response?.status === 403) {
+          throw new Error('ACCESS_DENIED');
+        }
         if (axiosError.response?.status === 404) {
           throw new Error('COMPOSITION_NOT_FOUND');
         }
@@ -82,6 +96,9 @@ class FileService {
     } catch (error: unknown) {
       if (error instanceof Error && 'response' in error) {
         const axiosError = error as AxiosError;
+        if (axiosError.response?.status === 403) {
+          throw new Error('ACCESS_DENIED');
+        }
         if (axiosError.response?.status === 404) {
           throw new Error('ACT_NOT_FOUND');
         }
@@ -99,6 +116,9 @@ class FileService {
     } catch (error: unknown) {
       if (error instanceof Error && 'response' in error) {
         const axiosError = error as AxiosError;
+        if (axiosError.response?.status === 403) {
+          throw new Error('ACCESS_DENIED');
+        }
         if (axiosError.response?.status === 404) {
           throw new Error('COMPOSITION_NOT_FOUND');
         }
@@ -112,8 +132,13 @@ class FileService {
       await this.downloadAct(objectId);
       return true;
     } catch (error: unknown) {
-      if (error instanceof Error && error.message === 'ACT_NOT_FOUND') {
-        return false;
+      if (error instanceof Error) {
+        if (error.message === 'ACT_NOT_FOUND') {
+          return false;
+        }
+        if (error.message === 'ACCESS_DENIED') {
+          throw new Error('ACCESS_DENIED');
+        }
       }
       throw error;
     }
@@ -124,8 +149,13 @@ class FileService {
       await this.downloadWorkComposition(objectId);
       return true;
     } catch (error: unknown) {
-      if (error instanceof Error && error.message === 'COMPOSITION_NOT_FOUND') {
-        return false;
+      if (error instanceof Error) {
+        if (error.message === 'COMPOSITION_NOT_FOUND') {
+          return false;
+        }
+        if (error.message === 'ACCESS_DENIED') {
+          throw new Error('ACCESS_DENIED');
+        }
       }
       throw error;
     }
