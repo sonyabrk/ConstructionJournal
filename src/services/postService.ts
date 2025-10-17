@@ -73,23 +73,19 @@ import { geoService } from './geoService';
 class PostService {
     async createPost(postData: CreatePostRequest, addLocation: boolean = true): Promise<Post> {
         try {
-            // Создаем FormData для отправки файлов
             const formData = new FormData();
             
-            // Добавляем текстовые поля
             formData.append('title', postData.title);
             formData.append('content', postData.content);
             formData.append('author', postData.author.toString());
             formData.append('object', postData.object.toString());
             
-            // Добавляем файлы, если они есть
             if (postData.files && postData.files.length > 0) {
                 postData.files.forEach((file) => {
-                    formData.append('files', file); // Бэкенд ожидает поле 'files'
+                    formData.append('files', file); 
                 });
             }
             
-            // Добавляем координаты, если требуется
             if (addLocation) {
                 try {
                     const userCoords = await geoService.getCurrentPosition();
@@ -99,7 +95,6 @@ class PostService {
                 }
             }
             
-            // Используем правильный эндпоинт бэкенда
             const res = await api.post<Post>(
                 `/objects/${postData.object}/create_post/`, 
                 formData,
@@ -118,7 +113,6 @@ class PostService {
 
     async getProjectPosts(projectId: number): Promise<Post[]> {
         try {
-            // Уточните у бэкенда правильный эндпоинт для получения постов проекта
             const res = await api.get<Post[]>(`/objects/${projectId}/posts/`);
             return res.data;
         } catch (error) {

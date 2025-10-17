@@ -36,8 +36,8 @@ export interface ConstructionProject {
         y: number;
     }>;
     status?: 'active' | 'completed' | 'planned';
-    posts?: Post[] | null; // Добавляем поле posts
-    users?: User[]; // Оставляем users, если оно используется
+    posts?: Post[] | null; 
+    users?: User[]; 
 }
 
 export interface Post {

@@ -17,8 +17,15 @@ class ProjectService {
     // GET-запрос - получение одного проекта по айди
     async getProjectById(id: number): Promise<ConstructionProject>{
         try {
+            console.log('🔍 Fetching project by ID:', id);
             const res = await api.get<ConstructionProject>(`/objects/${id}/`);
-            return res.data;
+            console.log('✅ Project data received:', {
+                id: res.data.id,
+                name: res.data.name,
+                status: res.data.status,
+                postsCount: res.data.posts?.length || 0
+            });
+        return res.data;
         } catch (error) {
             console.error('Error fetching project: ', error);
             throw error;
