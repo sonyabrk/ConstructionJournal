@@ -16,123 +16,175 @@ body {
     color: #000;
     font-size: 18px;
     .inspectorPage {
-        //height: 100vh;
-        .inspectorPage__container {
-            padding: 30px;
-            .navSection {
-                //margin-bottom: 20px;
-                .backBtn {
-                    font-size: 20px;
+        //padding: 30px;
+        .navSection {
+            margin: 20px;
+            .backBtn {
+                font-size: 20px;
+                font-weight: 500;
+            }
+        }
+        .objInfo {
+            margin: 20px;
+            h2 {
+                margin-bottom: 10px;
+                font-size: 26px;
+                font-weight: 600;
+            }
+            .objectDescription {
+                font-size: 18px;
+            }
+            .objectAddress {
+                font-size: 18px;
+            }
+        }
+        .mapSection {
+            margin: 20px;
+            h3 {
+                margin-bottom: 10px;
+                font-size: 20px;
+                font-weight: 500;
+            }
+            .mapContainer {
+                border: #000 solid 2px;
+                border-radius: $defoult-border-radius;
+                margin-bottom: 20px;
+                .leaflet-container {
+                    border-radius: $defoult-border-radius;
+                }
+                .leaflet-control-attribution {
+                    display: none;
+                }
+            }
+        }
+        .responsibleSection {
+            margin: 20px;
+            .responsibleInfo {
+                h4 {
                     font-weight: 500;
+                    margin-block: 5px;
                 }
             }
-            .objInfo {
-                margin-block: 20px;
-                h2 {
-                    margin-bottom: 10px;
-                    font-size: 26px;
-                    font-weight: 600;
-                }
-                .objectDescription {
-                    font-size: 18px;
-                }
-                .objectAddress {
-                    font-size: 18px;
-                }
+        }
+        .actionsSection {
+            margin: 20px;
+            .actBtn {
+                width: calc(100% - 40px);
+                height: 30px;
+                padding: 8px 20px;
+                border: solid 2px #000;
+                border-radius: $defoult-border-radius;
+                font-weight: 500;
             }
-            .mapSection {
+        }
+        .scheduleSection {
+            margin: 20px;
+            h3 {
+                margin-bottom: 10px;
+                font-size: 20px;
+                font-weight: 500;
+            }
+        }
+        .workCompositionSection {
+            margin: 20px;
+            .compositionBtn {
+                width: calc(100% - 40px);
+                height: 30px;
+                padding: 8px 20px;
+                border: solid 2px #000;
+                border-radius: $defoult-border-radius;
+                font-weight: 500;
+            }
+        }
+        .workersSection {
+            margin: 20px;
+            .workersHeader {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
                 h3 {
                     margin-bottom: 10px;
                     font-size: 20px;
                     font-weight: 500;
                 }
-                .mapContainer {
+                button {
+                    padding-inline: 10px;
+                    height: 50px;
+                    border: none;
+                    border-radius: $defoult-border-radius;
+                    background-color: $primary-color;
+                    color: #000;
+                    font-weight: 600;
+                    transition: all 0.3s ease;
+                    text-align: center;
+                    margin-left: 15px;
+                }
+
+                button:hover {
+                    background-color: $hover-color;
+                }
+            }
+        }
+        .postsSection {
+            margin: 20px;
+            h3 {
+                margin-bottom: 10px;
+                font-size: 20px;
+                font-weight: 500;
+            }
+            .postsContainer {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                .postCard {
                     border: #000 solid 2px;
                     border-radius: $defoult-border-radius;
-                    margin-bottom: 20px;
-                    .leaflet-container {
-                        border-radius: $defoult-border-radius;
-                    }
-                    .leaflet-control-attribution {
-                        display: none;
-                    }
-                }
-            }
-            .responsibleSection {
-                margin-bottom: 20px;
-                .responsibleInfo {
+                    padding: 20px;
                     h4 {
                         font-weight: 500;
-                        margin-block: 5px;
+                    }
+                    small {
+                        font-weight: 300;
                     }
                 }
             }
-            .actionsSection {
-                margin-bottom: 20px;
-                .actBtn {
-                    //width: 100%;
-                    height: 30px;
-                    padding: 8px 20px;
-                    border: solid 2px #000;
+        }
+        .role-specific-section {
+            margin: 20px;
+            h3 {
+                margin-bottom: 10px;
+                font-size: 20px;
+                font-weight: 500;
+            }
+            .tools-grid {
+                display: flex;
+                gap: 20px;
+                button {
+                    padding: 10px;
+                    height: 50px;
+                    border: none;
                     border-radius: $defoult-border-radius;
-                    font-weight: 500;
+                    background-color: $primary-color;
+                    color: #000;
+                    font-weight: 600;
+                    transition: all 0.3s ease;
+                    text-align: center;
+                    margin-bottom: 40px;
                 }
-            }
-            .scheduleSection {
-                margin-bottom: 20px;
-                h3 {
-                    margin-bottom: 10px;
-                    font-size: 20px;
-                    font-weight: 500;
-                }
-            }
-            .workCompositionSection {
-                margin-bottom: 20px;
-                .compositionBtn {
-                    //width: 100%;
-                    height: 30px;
-                    padding: 8px 20px;
-                    border: solid 2px #000;
-                    border-radius: $defoult-border-radius;
-                    font-weight: 500;
-                }
-            }
-            .workersSection {
-                .workersHeader {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-bottom: 10px;
-                    h3 {
-                        margin-bottom: 10px;
-                        font-size: 20px;
-                        font-weight: 500;
-                    }
-                    button {
-                        padding-inline: 10px;
-                        height: 50px;
-                        border: none;
-                        border-radius: $defoult-border-radius;
-                        background-color: $primary-color;
-                        color: #000;
-                        font-weight: 600;
-                        transition: all 0.3s ease;
-                        text-align: center;
-                        margin-left: 15px;
-                    }
-
-                    button:hover {
-                        background-color: $hover-color;
-                    }
+                
+                button:hover {
+                    background-color: $hover-color;
                 }
             }
         }
     }
 }
 
+
 @media screen and (max-width: 768px) {
     body {
-        font-size: 16px;
+        font-size: 15px;
         .inspectorPage {
             .inspectorPage__container {
                 .actionsSection {
