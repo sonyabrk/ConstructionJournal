@@ -254,23 +254,23 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                 </button>
             </div>
 
-            <section className="objInfo">
-                <h2>{project.name}</h2>
-                <p className="objectDescription">{project.description}</p>
-                <p className="objectAddress">{mainAddress}</p>
-            </section>
+                <section className="objInfo">
+                    <h2>{project.name}</h2>
+                    <p className="objectDescription">{project.description}</p>
+                    <p className="objectAddress">{mainAddress}</p>
+                </section>
 
-            <section className="mapSection">
-                <h3>Расположение объекта</h3>
-                <div className="mapContainer">
-                    <MapComponent 
-                        coordinates={project.coordinates} 
-                        zoom={16}
-                        height="400px"
-                        popupText={project.name} 
-                    />
-                </div>
-            </section>
+                <section className="mapSection">
+                    <h3>Расположение объекта</h3>
+                    <div className="mapContainer">
+                        <MapComponent 
+                            coordinates={project.coordinates} 
+                            zoom={16}
+                            height="400px"
+                            popupText={project.name} 
+                        />
+                    </div>
+                </section>
 
             <section className="responsibleSection">
                 <div className="responsibleInfo">
@@ -375,7 +375,7 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                     <h3>Работа на строительной площадке</h3>
                     {canAddWorkers && (
                         <button className="addWorkerBtn" onClick={handleAddWorker}>
-                            + Добавить участника
+                            Добавить участника
                         </button>
                     )}
                 </div>
