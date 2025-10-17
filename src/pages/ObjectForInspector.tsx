@@ -376,7 +376,7 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                     <h3>Работа на строительной площадке</h3>
                     {canAddWorkers && (
                         <button className="addWorkerBtn" onClick={handleAddWorker}>
-                            + Добавить участника
+                            Добавить участника
                         </button>
                     )}
                 </div>
