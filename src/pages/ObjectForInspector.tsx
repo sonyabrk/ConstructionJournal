@@ -6,6 +6,7 @@ import Header from "../components/Header";
 import MapComponent from '../components/MapComponent';
 import { projectService } from '../services/projectService';
 import { fileService } from '../services/fileService';
+import './ObjectForInspector.scss';
 
 interface ObjectForInspectorProps {
   currentUser?: User | null;
