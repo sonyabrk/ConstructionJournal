@@ -97,6 +97,35 @@ body {
                     font-weight: 500;
                 }
             }
+            .workersSection {
+                .workersHeader {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 10px;
+                    h3 {
+                        margin-bottom: 10px;
+                        font-size: 20px;
+                        font-weight: 500;
+                    }
+                    button {
+                        padding-inline: 10px;
+                        height: 50px;
+                        border: none;
+                        border-radius: $defoult-border-radius;
+                        background-color: $primary-color;
+                        color: #000;
+                        font-weight: 600;
+                        transition: all 0.3s ease;
+                        text-align: center;
+                        margin-left: 15px;
+                    }
+
+                    button:hover {
+                        background-color: $hover-color;
+                    }
+                }
+            }
         }
     }
 }
@@ -126,7 +155,13 @@ body {
                         font-weight: 500;
                     }
                 }
-
+                .workersSection {
+                    .workersHeader {
+                        button {
+                            
+                        }
+                    }
+                }
             }
         }
     }
