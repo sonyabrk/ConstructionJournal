@@ -1,6 +1,7 @@
 @use '../pages/reset.scss';
 
 $primary-color: #87786F;
+$defoult-border-radius: 10px;
 
 .header {
     background-color: $primary-color;
@@ -20,7 +21,7 @@ $primary-color: #87786F;
             Verdana,
             sans-serif;
         font-weight: 600;
-        font-size: clamp(1.5rem, 3vw, 2rem);
+        font-size: clamp(1.4rem, 3vw, 2rem);
         text-align: center;
     }
 
@@ -40,6 +41,35 @@ $primary-color: #87786F;
                 font-weight: 500;
             }
         }
+
+        .profile-dropdown {
+            border: solid #000 2px;
+            border-radius: $defoult-border-radius;
+            background-color: #fff;
+            width: 100%;
+            
+            font-size: clamp(0.9rem, 1.8vw, 1rem);
+            margin-top: 10px;
+            .dropdown-header {
+                margin: 10px;
+                
+                .user-name {
+                    margin-bottom: 2px;
+                    font-weight: 500;
+                }
+            }
+            .dropdown-divider {
+                border-bottom: #000 solid 1px;
+            }
+            .dropdown-actions {
+                .dropdown-btn {
+                    margin-block: 10px;
+                    text-align: center;
+                    width: 100%;
+                    font-weight: 500;
+                }
+            }
+        }
     }
 }
 
@@ -47,13 +77,17 @@ $primary-color: #87786F;
     .header {
         padding-block: 20px;
         padding-inline: 35px;
-
-        .headerProfileImg {
-            width: 45px;
-            height: 45px;
+        .headerProfileContainer {
+            .headerProfile {
+                .headerProfileImg {
+                    width: 35px;
+                    height: 35px;
+                }
+            }
         }
     }
 }
+
 
 @media screen and (max-width: 400px) {
     .header {
