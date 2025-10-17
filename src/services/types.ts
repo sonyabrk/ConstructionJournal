@@ -139,3 +139,8 @@ export interface LoginResponse {
     user?: User;
     refreshToken?: string;
 }
+
+export interface FileUploadResponse {
+  message: string;
+  fileUrl?: string;
+}

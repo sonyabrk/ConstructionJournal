@@ -27,8 +27,8 @@ class ProjectService {
     // POST-запрос - создание нового проекта
     async createProject(projectData: CreateProjectRequest): Promise<ConstructionProject> {
         try {
-            const res = await api.post<ApiResponse<ConstructionProject>>('/objects/my_objects/',projectData);
-            return res.data.data;
+            const res = await api.post<ConstructionProject>('/objects/my_objects/',projectData);
+            return res.data;
         } catch (error) {
             console.error('Error creating project: ', error);
             throw error;

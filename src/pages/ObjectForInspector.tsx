@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react'; 
 import { useParams, useNavigate } from 'react-router-dom';
 import { type ConstructionProject, type User } from '../services/types';
 import WorkCard from '../components/WorkCard';
 import Header from "../components/Header";
 import MapComponent from '../components/MapComponent';
 import { projectService } from '../services/projectService';
+import { fileService } from '../services/fileService';
 
 const ObjectForInspector = () => {
     const { projectId } = useParams<{ projectId: string }>();
@@ -12,6 +13,30 @@ const ObjectForInspector = () => {
     const [project, setProject] = useState<ConstructionProject | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    const actFileInputRef = useRef<HTMLInputElement>(null);
+    const compositionFileInputRef = useRef<HTMLInputElement>(null);
+
+    const [actFile, setActFile] = useState<File | null>(null);
+    const [compositionFile, setCompositionFile] = useState<File | null>(null);
+    const [hasAct, setHasAct] = useState<boolean>(false);
+    const [hasWorkComposition, setHasWorkComposition] = useState<boolean>(false);
+
+    const checkFilesExistence = useCallback(async () => {
+        if (!projectId) return;
+        
+        try {
+            const [actExists, compositionExists] = await Promise.all([
+                fileService.checkActExists(Number(projectId)),
+                fileService.checkWorkCompositionExists(Number(projectId))
+            ]);
+            
+            setHasAct(actExists);
+            setHasWorkComposition(compositionExists);
+        } catch (error) {
+            console.error('Ошибка проверки файлов:', error);
+        }
+    }, [projectId]); 
 
     useEffect(() => {
         const fetchProjectData = async () => {
@@ -23,6 +48,8 @@ const ObjectForInspector = () => {
                 
                 const projectData = await projectService.getProjectById(Number(projectId));
                 setProject(projectData);
+                
+                await checkFilesExistence();
             } catch (err) {
                 setError(err instanceof Error ? err.message : 'Ошибка загрузки');
             } finally {
@@ -33,14 +60,92 @@ const ObjectForInspector = () => {
         if (projectId) {
             fetchProjectData();
         }
-    }, [projectId]);
+    }, [projectId, checkFilesExistence]); 
 
     const handleOpenAct = () => {
-        console.log('Открытие акта объекта', projectId);
+        if (hasAct) {
+            downloadAct();
+        } else {
+            actFileInputRef.current?.click();
+        }
     };
 
     const handleShowWorkComposition = () => {
-        console.log('Состав работ объекта', projectId);
+        if (hasWorkComposition) {
+            downloadWorkComposition();
+        } else {
+            compositionFileInputRef.current?.click();
+        }
+    };
+
+    const handleActFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setActFile(file);
+            uploadActFile(file);
+        }
+    };
+
+    const handleCompositionFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setCompositionFile(file);
+            uploadWorkCompositionFile(file);
+        }
+    };
+
+    const uploadActFile = async (file: File) => {
+        try {
+            if (!projectId) throw new Error('ID проекта не указан');
+            
+            await fileService.uploadAct(Number(projectId), file);
+            setHasAct(true);
+            alert('Акт успешно загружен!');
+            
+        } catch (error) {
+            console.error('Ошибка загрузки акта:', error);
+            alert('Ошибка загрузки акта');
+        }
+    };
+
+    const downloadAct = async () => {
+        try {
+            if (!projectId) throw new Error('ID проекта не указан');
+            
+            const blob = await fileService.downloadAct(Number(projectId));
+            fileService.downloadBlob(blob, 'act.pdf');
+            
+        } catch (error) {
+            console.error('Ошибка скачивания акта:', error);
+            alert('Ошибка скачивания акта');
+        }
+    };
+
+    const uploadWorkCompositionFile = async (file: File) => {
+        try {
+            if (!projectId) throw new Error('ID проекта не указан');
+            
+            await fileService.uploadWorkComposition(Number(projectId), file);
+            setHasWorkComposition(true);
+            alert('Состав работ успешно загружен!');
+            
+        } catch (error) {
+            console.error('Ошибка загрузки состава работ:', error);
+            alert('Ошибка загрузки состава работ');
+        }
+    };
+
+    const downloadWorkComposition = async () => {
+        try {
+            if (!projectId) throw new Error('ID проекта не указан');
+            
+            const blob = await fileService.downloadWorkComposition(Number(projectId));
+            fileService.downloadBlob(blob, 'work_composition.pdf');
+            
+        } catch (error) {
+            console.error('Ошибка скачивания состава работ:', error);
+            alert('Ошибка скачивания состава работ');
+        }
     };
 
     const handleAddWorker = () => {
@@ -57,7 +162,7 @@ const ObjectForInspector = () => {
     if (!project) return <div className="errorObjInsp">Объект не найден</div>;
 
     const mainAddress = project.coordinates.length > 0 
-        ? `Координаты: ${project.coordinates[0]}, ${project.coordinates[1]}`
+        ? `Координаты: ${project.coordinates[0].x}, ${project.coordinates[0].y}`
         : 'Адрес не указан';
 
     return (
@@ -112,11 +217,19 @@ const ObjectForInspector = () => {
 
             <section className="actionsSection">
                 <button className="actBtn" onClick={handleOpenAct}>
-                    Акт открытия объекта
+                    {hasAct ? '📥 Скачать акт открытия объекта' : 
+                     actFile ? `✅ Акт загружен: ${actFile.name}` : '📤 Загрузить акт открытия объекта'}
                 </button>
+                
+                <input
+                    type="file"
+                    ref={actFileInputRef}
+                    onChange={handleActFileChange}
+                    style={{ display: 'none' }}
+                    accept=".pdf,.doc,.docx" 
+                />
             </section>
 
-            {/* добавить сетевой график */}
             <section className="scheduleSection">
                 <h3>Сетевой график работ</h3>
                 <div className="scheduleContainer">
@@ -128,8 +241,17 @@ const ObjectForInspector = () => {
 
             <section className="workCompositionSection">
                 <button className="compositionBtn" onClick={handleShowWorkComposition}>
-                    Состав работ
+                    {hasWorkComposition ? '📥 Скачать состав работ' : 
+                     compositionFile ? `✅ Состав работ загружен: ${compositionFile.name}` : '📤 Загрузить состав работ'}
                 </button>
+                
+                <input
+                    type="file"
+                    ref={compositionFileInputRef}
+                    onChange={handleCompositionFileChange}
+                    style={{ display: 'none' }}
+                    accept=".pdf,.doc,.docx,.xls,.xlsx"
+                />
             </section>
 
             <section className="workersSection">
@@ -159,4 +281,3 @@ const ObjectForInspector = () => {
 }
 
 export default ObjectForInspector;
-
