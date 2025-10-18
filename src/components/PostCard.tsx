@@ -16,17 +16,23 @@ function PostCard({ post, onReview }: PostCardProps) {
     return (
         <div className="postCard">
             <div className="card">
-                <strong>{post.author.username}</strong>
+                <h4>{post.author.username}</h4>
                 <span>{post.author.position}</span>
                 <span>{post.created_at}</span>
                 <p className="postTitle">{post.title}</p>
-                <button
-                    className="reviewBtn"
-                    onClick={handleReviewClick}
-                    hidden
-                >
-                    Обзор
-                </button>
+                <div className="postCardBtn">
+                    <button
+                        className="reviewBtn"
+                        onClick={handleReviewClick}
+                    >
+                        Обзор
+                    </button>
+                    <button
+                        className="reviewBtn"
+                    >
+                        Ответ
+                    </button>
+                </div>
             </div>
         </div>
     );

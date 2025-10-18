@@ -1,4 +1,4 @@
-@use 'reset.scss';
+@use '../pages/reset.scss';
 
 $primary-color: #87786F;
 $hover-color: #63564E;
@@ -14,32 +14,55 @@ $defoult-border-radius: 10px;
 @mixin h4-style {
     font-weight: 500;
 }
+body{
+    .postCard {
+        .card {
+            h4 {
+                @include h4-style;
+            }
 
-.postCard {
-    .card {
-        h3 {
-            @include h3-style
-        }
-    
-        .postsContainer {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-    
-            .postCard {
-                border: #000 solid 2px;
-                border-radius: $defoult-border-radius;
-                padding: 20px;
-    
-                h4 {
-                    @include h4-style
+            p {
+                margin-top: 10px; 
+            }
+        
+            .postsContainer {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+        
+                .postCard {
+                    border: #000 solid 2px;
+                    border-radius: $defoult-border-radius;
+                    padding: 20px;
+        
+                    h4 {
+                        @include h4-style
+                    }
+        
+                    small {
+                        font-weight: 300;
+                    }
                 }
-    
-                small {
-                    font-weight: 300;
+            }
+            .postCardBtn {
+                display: flex;
+                gap: 10px;
+                margin-top: 10px;
+                button {
+                    padding: 10px;
+                    border: none;
+                    border-radius: $defoult-border-radius;
+                    background-color: $primary-color;
+                    color: #000;
+                    font-weight: 600;
+                    transition: all 0.3s ease;
+                    text-align: center;
+                }
+
+                button:hover {
+                    background-color: $hover-color;
                 }
             }
         }
     }
 }
-
