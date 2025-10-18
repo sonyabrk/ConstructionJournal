@@ -4,14 +4,23 @@ import './PostCard.scss';
 interface PostCardProps {
     post: Post;
     onReview?: (post: Post) => void;
+    onAnswer?: (post: Post) => void; // добавляем новый пропс
 }
 
-function PostCard({ post, onReview }: PostCardProps) {
+function PostCard({ post, onReview, onAnswer }: PostCardProps) {
     const handleReviewClick = () => {
         if (onReview) {
             onReview(post);
         }
     };
+
+    const handleAnswerClick = () => {
+        if (onAnswer) {
+            onAnswer(post);
+        }
+    };
+
+    
 
     return (
         <div className="postCard">
@@ -28,7 +37,8 @@ function PostCard({ post, onReview }: PostCardProps) {
                         Обзор
                     </button>
                     <button
-                        className="reviewBtn"
+                        className="answerBtn"
+                        onClick={handleAnswerClick}
                     >
                         Ответ
                     </button>

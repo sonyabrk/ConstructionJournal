@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { type ConstructionProject, type User, type Post } from '../services/types';
 import WorkCard from '../components/WorkCard';
 import PostCard from '../components/PostCard';
+import CreatePostCard from '../components/CreatePostCard';
+import ViewPostCard from '../components/ViewPostCard';
 import Header from "../components/Header";
 import MapComponent from '../components/MapComponent';
 import { projectService } from '../services/projectService';
@@ -19,6 +21,10 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
     const [project, setProject] = useState<ConstructionProject | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    // для создания и просмотра поста
+    const [isCreatePostVisible, setIsCreatePostVisible] = useState(false);
+    const [isViewPostVisible, setIsViewPostVisible] = useState(false);
+    const [selectedPost, setSelectedPost] = useState<Post | null>(null);
     
     // роли и возможности на основе currentUser из пропсов
     const userRole = currentUser?.role;
@@ -236,9 +242,36 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
     };
     
 
-    const handlePostReview = (post: Post) => {
-        console.log('Обзор пользователя:', post);
-        navigate(`/post/${post.id}`);
+    // Обработчики для создания поста
+    const handleOpenCreatePost = () => {
+        setIsCreatePostVisible(true);
+    };
+
+    const handleCloseCreatePost = () => {
+        setIsCreatePostVisible(false);
+    };
+
+    const handlePostCreated = (post: Post) => {
+        console.log('Новый пост создан:', post);
+        setIsCreatePostVisible(false);
+        // Обновить список постов если нужно
+    };
+
+    // Обработчики для просмотра поста
+    const handleReviewPost = (post: Post) => {
+        setSelectedPost(post);
+        setIsViewPostVisible(true);
+    };
+
+    const handleCloseViewPost = () => {
+        setIsViewPostVisible(false);
+        setSelectedPost(null);
+    };
+
+    // Обработчик для кнопки "Ответ" (создание поста в ответ)
+    const handleAnswerPost = (post: Post) => {
+        setSelectedPost(post); // сохраняем пост для контекста ответа
+        setIsCreatePostVisible(true);
     };
 
     if (loading) return <div className="loadingObjInsp">Загрузка...</div>;
@@ -332,7 +365,9 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                             <PostCard
                                 key={post.id}
                                 post={post}
-                                onReview={handlePostReview}
+                                onReview={handleReviewPost}
+                                // Добавляем обработчик для кнопки "Ответ"
+                                onAnswer={() => handleAnswerPost(post)}
                             />
                             //ДОБАВИЛА ПОСТКАРД!!!!!!!!!!!!!!!!!!!!!
                             // <div key={post.id} className="postCard">
@@ -415,10 +450,10 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                 <section className="role-specific-section contractor-tools">
                     <h3>Инструменты подрядчика</h3>
                     <div className="tools-grid">
-                        <button className="tool-btn">Добавление ТТН</button>
-                        <button className="tool-btn">Отчеты по работам</button>
-                        <button className="tool-btn">Исправление замечаний</button>
-                        <button className="tool-btn">Исправление нарушений</button>
+                        <button className="tool-btn" onClick={handleOpenCreatePost}>Добавление ТТН</button>
+                        <button className="tool-btn" onClick={handleOpenCreatePost}>Отчеты по работам</button>
+                        <button className="tool-btn" onClick={handleOpenCreatePost}>Исправление замечаний</button>
+                        <button className="tool-btn" onClick={handleOpenCreatePost}>Исправление нарушений</button>
                     </div>
                 </section>
             )}
@@ -427,9 +462,9 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                 <section className="role-specific-section supervision-tools">
                     <h3>Инструменты надзора</h3>
                     <div className="tools-grid">
-                        <button className="tool-btn">Добавление замечаний</button>
-                        <button className="tool-btn">Подтверждение исправления замечаний</button>
-                        <button className="tool-btn">Отклонение исправления замечаний</button>
+                        <button className="tool-btn" onClick={handleOpenCreatePost}>Добавление замечаний</button>
+                        <button className="tool-btn" onClick={handleOpenCreatePost}>Подтверждение исправления замечаний</button>
+                        <button className="tool-btn" onClick={handleOpenCreatePost}>Отклонение исправления замечаний</button>
                     </div>
                 </section>
             )}
@@ -438,10 +473,10 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                 <section className="role-specific-section inspector-tools">
                     <h3>Инструменты инспектора</h3>
                     <div className="tools-grid">
-                        <button className="tool-btn">Инициирование лаб.отбора</button>
-                        <button className="tool-btn">Добавление нарушений</button>
-                        <button className="tool-btn">Подтверждение исправления нарушений</button>
-                        <button className="tool-btn">Отклонение исправления нарушений</button>
+                        <button className="tool-btn" onClick={handleOpenCreatePost}>Инициирование лаб.отбора</button>
+                        <button className="tool-btn" onClick={handleOpenCreatePost}>Добавление нарушений</button>
+                        <button className="tool-btn" onClick={handleOpenCreatePost}>Подтверждение исправления нарушений</button>
+                        <button className="tool-btn" onClick={handleOpenCreatePost}>Отклонение исправления нарушений</button>
                     </div>
                 </section>
             )}
@@ -450,11 +485,37 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                 <section className="role-specific-section admin-tools">
                     <h3>Панель администратора</h3>
                     <div className="tools-grid">
-                        <button className="tool-btn">Управление пользователями</button>
-                        <button className="tool-btn">Настройки проекта</button>
-                        <button className="tool-btn">Системные логи</button>
+                        <button className="tool-btn" onClick={handleOpenCreatePost}>Управление пользователями</button>
+                        <button className="tool-btn" onClick={handleOpenCreatePost}>Настройки проекта</button>
+                        <button className="tool-btn" onClick={handleOpenCreatePost}>Системные логи</button>
                     </div>
                 </section>
+            )}
+
+            {isCreatePostVisible && (
+                <div className="modalOverlay">
+                    <div className="modalContent">
+                        <CreatePostCard
+                            currentUser={currentUser}
+                            onPostCreated={handlePostCreated}
+                            onCancel={handleCloseCreatePost}
+                            // Можно передать пост для контекста ответа
+                            //parentPost={selectedPost}
+                        />
+                    </div>
+                </div>
+            )}
+
+            {isViewPostVisible && selectedPost && (
+                <div className="modalOverlay">
+                    <div className="modalContent">
+                        <ViewPostCard
+                            post={selectedPost}
+                            currentUser={currentUser}
+                            onClose={handleCloseViewPost}
+                        />
+                    </div>
+                </div>
             )}
         </div>
     );

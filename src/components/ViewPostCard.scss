@@ -1,0 +1,154 @@
+@use '../pages/reset.scss';
+
+$primary-color: #87786F;
+$hover-color: #63564E;
+
+@mixin h2-style {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    color: #555;
+    font-weight: 500;
+}
+
+.view-post-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
+    animation: view-post-fadeIn 0.3s ease-out;
+}
+
+.view-post-modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    animation: view-post-slideUp 0.3s ease-out;
+    position: relative;
+}
+
+.view-post-header {
+    margin-bottom: 20px;
+    padding-right: 40px;
+
+    h1 {
+        
+        font-size: 24px;
+        color: #000;
+        font-weight: 600;
+        text-align: center;
+    }
+}
+
+.view-post-section {
+    
+
+    h2 {
+        @include h2-style;
+    }
+
+    p {
+        margin-bottom: 10px;
+    }
+}
+
+.view-doc-section {
+    margin-bottom: 20px;
+
+    h2 {
+        @include h2-style;
+    }
+}
+
+.view-post-files-list {
+    display: grid;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.view-post-file-item {
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+    word-break: break-all;
+    font-family: monospace;
+    font-size: 14px;
+}
+
+.view-post-no-files {
+    color: #6c757d;
+    font-style: italic;
+    margin: 0;
+}
+
+.view-post-actions {
+    margin-top: 24px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.view-post-primary-button {
+    background: $primary-color;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background: $hover-color;
+    }
+}
+
+// Анимации
+@keyframes view-post-fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes view-post-slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+// Блокировка скролла для body
+.view-post-body-no-scroll {
+    overflow: hidden;
+}
+
+// Адаптивность
+@media (max-width: 768px) {
+    .view-post-modal-content {
+        width: 95%;
+        padding: 16px;
+        max-height: 85vh;
+    }
+}
