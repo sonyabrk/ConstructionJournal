@@ -5,7 +5,7 @@
 $primary-color: #87786F;
 $hover-color: #63564E;
 $default-color: #FFF;
-$defoult-border-redius: 10px;
+$defoult-border-radius: 10px;
 
 body {
     background-color: $default-color;
@@ -42,7 +42,7 @@ body {
                             background-color: $default-color;
                             color: #000;
                             border: #000, solid, 2px;
-                            border-radius: $defoult-border-redius;
+                            border-radius: $defoult-border-radius;
                             transition: none !important;
                             animation: none !important;
                             transform: none !important;
@@ -66,17 +66,36 @@ body {
                     gap: 20px;
                     grid-template-columns: repeat(2, 1fr);
                 }
+                .role-info {
+                    button {
+                        padding-inline: 10px;
+                        height: 50px;
+                        border: none;
+                        border-radius: $defoult-border-radius;
+                        background-color: $primary-color;
+                        color: #000;
+                        font-weight: 600;
+                        transition: all 0.3s ease;
+                        text-align: center;
+                        margin-top: 15px;
+                    }
+                
+                    button:hover {
+                        background-color: $hover-color;
+                    }
+                }
     
             }
     
             .mb-6 {
+                margin-bottom: 10px;
                 .flex {
                     display: flex;
                     justify-content: end;
     
                     select {
                         border: 2px solid #000;
-                        border-radius: $defoult-border-redius;
+                        border-radius: $defoult-border-radius;
                         padding: 8px 12px;
                         background-color: white;
                         color: #374151;

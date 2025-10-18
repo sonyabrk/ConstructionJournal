@@ -113,8 +113,7 @@ body {
                     @include h3-style;
                 }
                 button {
-                    padding-inline: 10px;
-                    height: 50px;
+                    padding: 12px;
                     border: none;
                     border-radius: $defoult-border-radius;
                     background-color: $primary-color;
@@ -163,11 +162,12 @@ body {
                 @include h3-style;
             }
             .tools-grid {
-                display: flex;
-                gap: 20px;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+                
                 button {
-                    padding: 10px;
-                    height: 50px;
+                    padding: 12px;
                     border: none;
                     border-radius: $defoult-border-radius;
                     background-color: $primary-color;
@@ -175,7 +175,6 @@ body {
                     font-weight: 600;
                     transition: all 0.3s ease;
                     text-align: center;
-                    margin-bottom: 40px;
                 }
                 
                 button:hover {
@@ -211,6 +210,11 @@ body {
                         border-radius: $defoult-border-radius;
                         font-weight: 500;
                     }
+                }
+            }
+            .role-specific-section {
+                .tools-grid {
+                    grid-template-columns: repeat(2, 1fr);
                 }
             }
         }

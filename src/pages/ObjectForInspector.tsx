@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { type ConstructionProject, type User, type Post } from '../services/types';
 import WorkCard from '../components/WorkCard';
+import PostCard from '../components/PostCard';
 import Header from "../components/Header";
 import MapComponent from '../components/MapComponent';
 import { projectService } from '../services/projectService';
@@ -234,6 +235,11 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
         navigate(`/user/${user.id}`);
     };
 
+    const handlePostReview = (post: Post) => {
+        console.log('Обзор пользователя:', post);
+        navigate(`/post/${post.id}`);
+    };
+
     if (loading) return <div className="loadingObjInsp">Загрузка...</div>;
     if (error) return <div className="errorObjInsp">Ошибка: {error}</div>;
     if (!project) return <div className="errorObjInsp">Объект не найден</div>;
@@ -322,11 +328,17 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                     <h3>Посты объекта</h3>
                     <div className="postsContainer">
                         {project.posts.map((post: Post) => (
-                            <div key={post.id} className="postCard">
-                                <h4>{post.title}</h4>
-                                <p>{post.content}</p>
-                                <small>Создан: {post.created_at}</small>
-                            </div>
+                            <PostCard
+                                key={post.id}
+                                post={post}
+                                onReview={handlePostReview}
+                            />
+                            //ДОБАВИЛА ПОСТКАРД!!!!!!!!!!!!!!!!!!!!!
+                            // <div key={post.id} className="postCard">
+                            //     <h4>{post.title}</h4>
+                            //     <p>{post.content}</p>
+                            //     <small>Создан: {post.created_at}</small>
+                            // </div>
                         ))}
                     </div>
                 </section>
@@ -402,9 +414,10 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                 <section className="role-specific-section contractor-tools">
                     <h3>Инструменты подрядчика</h3>
                     <div className="tools-grid">
-                        <button className="tool-btn">Управление материалами</button>
+                        <button className="tool-btn">Добавление ТТН</button>
                         <button className="tool-btn">Отчеты по работам</button>
-                        <button className="tool-btn">Финансовые документы</button>
+                        <button className="tool-btn">Исправление замечаний</button>
+                        <button className="tool-btn">Исправление нарушений</button>
                     </div>
                 </section>
             )}
@@ -413,9 +426,9 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                 <section className="role-specific-section supervision-tools">
                     <h3>Инструменты надзора</h3>
                     <div className="tools-grid">
-                        <button className="tool-btn">Контроль качества</button>
-                        <button className="tool-btn">Акты приемки</button>
-                        <button className="tool-btn">Журнал работ</button>
+                        <button className="tool-btn">Добавление замечаний</button>
+                        <button className="tool-btn">Подтверждение исправления замечаний</button>
+                        <button className="tool-btn">Отклонение исправления замечаний</button>
                     </div>
                 </section>
             )}
@@ -424,9 +437,10 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                 <section className="role-specific-section inspector-tools">
                     <h3>Инструменты инспектора</h3>
                     <div className="tools-grid">
-                        <button className="tool-btn">Проверка документации</button>
-                        <button className="tool-btn">Акт проверки</button>
-                        <button className="tool-btn">Рекомендации</button>
+                        <button className="tool-btn">Инициирование лаб.отбора</button>
+                        <button className="tool-btn">Добавление нарушений</button>
+                        <button className="tool-btn">Подтверждение исправления нарушений</button>
+                        <button className="tool-btn">Отклонение исправления нарушений</button>
                     </div>
                 </section>
             )}
