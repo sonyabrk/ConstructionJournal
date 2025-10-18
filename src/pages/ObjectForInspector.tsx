@@ -26,7 +26,7 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
     const isInspector = userRole === 'ROLE_INSPECTOR';
     const isAdmin = userRole === 'ROLE_ADMIN';
 
-    // права доступа для файлов
+    // права доступа для файлов л
     const canUploadAct = isContractor || isSupervision || isAdmin;
     const canDownloadAct = isContractor || isSupervision || isInspector || isAdmin;
     const canUploadComposition = isContractor || isAdmin;
