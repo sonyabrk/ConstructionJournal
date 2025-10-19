@@ -9,6 +9,7 @@ import ViewWorkerCard from '../components/ViewWorkerCard';
 import Header from "../components/Header";
 import MapComponent from '../components/MapComponent';
 import { projectService } from '../services/projectService';
+import { offlineService } from '../services/offlineService';
 import { fileService } from '../services/fileService';
 import './ObjectForInspector.scss';
 
@@ -53,18 +54,18 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
     const [hasAct, setHasAct] = useState<boolean>(false);
     const [hasWorkComposition, setHasWorkComposition] = useState<boolean>(false);
 
-    // Проверка существования файлов с учетом прав доступа
+    // проверка существования файлов с учетом прав доступа
     const checkFilesExistence = useCallback(async () => {
         if (!projectId) return;
         
         try {
-            // Проверяем акт, если пользователь имеет права на его просмотр
+            // проверяем акт, если пользователь имеет права на его просмотр
             if (canDownloadAct) {
                 const actExists = await fileService.checkActExists(Number(projectId));
                 setHasAct(actExists);
             }
             
-            // Проверяем состав работ, если пользователь имеет права на его просмотр
+            // проверяем состав работ, если пользователь имеет права на его просмотр
             if (canViewWorkComposition) {
                 const compositionExists = await fileService.checkWorkCompositionExists(Number(projectId));
                 setHasWorkComposition(compositionExists);
@@ -244,6 +245,7 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
         console.log('Обзор пользователя:', user);
         navigate(`/user/${user.id}`);
     };
+    
 
     const handleOpenCreatePost = () => {
         setIsCreatePostVisible(true);
@@ -296,6 +298,36 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
         }
     };
 
+    const [isOnline, setIsOnline] = useState(navigator.onLine);
+    const [pendingActionsCount, setPendingActionsCount] = useState(0);
+
+    // Слушаем изменения онлайн статуса
+    useEffect(() => {
+        const handleOnline = () => {
+            setIsOnline(true);
+            console.log('🌐 App is online');
+        };
+
+        const handleOffline = () => {
+            setIsOnline(false);
+            console.log('📴 App is offline');
+        };
+
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+
+        // Периодически проверяем количество pending actions
+        const interval = setInterval(() => {
+            setPendingActionsCount(offlineService.getPendingActionsCount());
+        }, 5000);
+
+        return () => {
+            window.removeEventListener('online', handleOnline);
+            window.removeEventListener('offline', handleOffline);
+            clearInterval(interval);
+        };
+    }, []);
+
 
     if (loading) return <div className="loadingObjInsp">Загрузка...</div>;
     if (error) return <div className="errorObjInsp">Ошибка: {error}</div>;
@@ -316,6 +348,17 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                 > 
                     ← Назад к списку объектов 
                 </button>
+
+                <div className="connection-status">
+                    <span className={`status-indicator ${isOnline ? 'online' : 'offline'}`}>
+                        {isOnline ? '🟢 Онлайн' : '🔴 Офлайн'}
+                    </span>
+                    {pendingActionsCount > 0 && (
+                        <span className="pending-actions">
+                            ⏳ {pendingActionsCount} действий в очереди
+                        </span>
+                    )}
+                </div>
             </div>
 
                 <section className="objInfo">
@@ -384,20 +427,13 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                 <section className="postsSection">
                     <h3>Посты объекта</h3>
                     <div className="postsContainer">
-                        {project.posts.map((post: Post) => (
+                        {project.posts.map((post: Post, index) => (
                             <PostCard
-                                key={post.id}
+                                key={post.id || `post-${index}`}
                                 post={post}
                                 onReview={handleReviewPost}
-                                // Добавляем обработчик для кнопки "Ответ"
                                 onAnswer={() => handleAnswerPost(post)}
                             />
-                            //ДОБАВИЛА ПОСТКАРД!!!!!!!!!!!!!!!!!!!!!
-                            // <div key={post.id} className="postCard">
-                            //     <h4>{post.title}</h4>
-                            //     <p>{post.content}</p>
-                            //     <small>Создан: {post.created_at}</small>
-                            // </div>
                         ))}
                     </div>
                 </section>
@@ -454,9 +490,10 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                 
                 <div className="workersGrid">
                     {project.users && project.users.length > 0 ? (
-                        project.users.map((user: User) => (
+                        project.users.map((user: User, index) => (
                             <WorkCard 
-                                key={user.id}
+
+                                key={user.id || `user-${index}`} 
                                 user={user}
                                 onReview={handleReviewWorker}
                                 currentUserRole={currentUserRole}
@@ -531,8 +568,7 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                             currentUser={currentUser}
                             onPostCreated={handlePostCreated}
                             onCancel={handleCloseCreatePost}
-                            // Можно передать пост для контекста ответа
-                            //parentPost={selectedPost}
+                            projectId={Number(projectId)} 
                         />
                     </div>
                 </div>

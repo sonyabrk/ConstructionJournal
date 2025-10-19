@@ -8,8 +8,12 @@ class PostService {
             
             formData.append('title', postData.title);
             formData.append('content', postData.content);
-            formData.append('author', postData.author.toString());
-            formData.append('object', postData.object.toString());
+            if (postData.author) {
+                formData.append('author', postData.author.toString());
+            }
+            if (postData.object) {
+                formData.append('object', postData.object.toString());
+            }
             
             if (postData.files && postData.files.length > 0) {
                 postData.files.forEach((file) => {
@@ -18,8 +22,13 @@ class PostService {
             }
             
             const res = await api.post<Post>(
-                `/objects/${postData.object}/create_post/`, 
-                formData
+                `/objects/access/${postData.object}/create_post/`, 
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
             );
             return res.data;
         } catch (error) {
@@ -34,6 +43,16 @@ class PostService {
             return res.data;
         } catch (error) {
             console.error('Error fetching post:', error);
+            throw error;
+        }
+    }
+
+    async getPostsByObjectId(objectId: number): Promise<Post[]> {
+        try {
+            const res = await api.get<Post[]>(`/objects/${objectId}/posts/`);
+            return res.data;
+        } catch (error) {
+            console.error('Error fetching posts for object:', error);
             throw error;
         }
     }
@@ -53,6 +72,19 @@ class PostService {
             await api.delete(`/objects/${objectId}/${postId}/`);
         } catch (error) {
             console.error('Error deleting post:', error);
+            throw error;
+        }
+    }
+
+    async getPostFile(objectId: number, postId: number, fileName: string): Promise<Blob> {
+        try {
+            const res = await api.get<Blob>(`/objects/${objectId}/${postId}/file/`, {
+                params: { file_name: fileName },
+                responseType: 'blob'
+            });
+            return res.data;
+        } catch (error) {
+            console.error('Error fetching post file:', error);
             throw error;
         }
     }
