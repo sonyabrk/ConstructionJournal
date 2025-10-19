@@ -40,7 +40,6 @@ $hover-color: #63564E;
 
 .view-post-header {
     margin-bottom: 20px;
-    padding-right: 40px;
 
     h1 {
         
@@ -110,6 +109,9 @@ $hover-color: #63564E;
     font-size: 14px;
     font-weight: 500;
     transition: background-color 0.2s ease;
+    min-width: auto;
+    width: 100%;
+    text-align: center;
 
     &:hover {
         background: $hover-color;

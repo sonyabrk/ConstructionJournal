@@ -1,3 +1,13 @@
+$primary-color: #87786F;
+$hover-color: #63564E;
+
+@mixin h2-style {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    color: #555;
+    font-weight: 500;
+}
+
 .create-post-modal-overlay {
     position: fixed;
     top: 0;
@@ -51,10 +61,11 @@
     margin-bottom: 20px;
 
     h1 {
-        margin: 0 0 8px 0;
+    
         font-size: 24px;
-        color: #333;
+        color: #000;
         font-weight: 600;
+        text-align: center;
     }
 }
 
@@ -65,74 +76,74 @@
 }
 
 .create-post-section {
-    margin-bottom: 20px;
+    //margin-bottom: 20px;
 
     h2 {
-        margin: 0 0 12px 0;
-        font-size: 18px;
-        color: #555;
-        font-weight: 500;
+        @include h2-style;
     }
 }
 
 .create-post-select {
     width: 100%;
     padding: 10px 12px;
-    border: 1px solid #ddd;
+    border: 1px solid #000;
     border-radius: 6px;
     font-size: 14px;
     background: white;
+    color: #000;
     transition: border-color 0.2s ease;
 
     &:focus {
         outline: none;
-        border-color: #007bff;
+        border-color: $primary-color;
     }
 }
 
 .create-post-input {
     width: 100%;
     padding: 10px 12px;
-    border: 1px solid #ddd;
+    border: 1px solid #000;
     border-radius: 6px;
     font-size: 14px;
     transition: border-color 0.2s ease;
+    background: #FFF;
 
     &:focus {
         outline: none;
-        border-color: #007bff;
+        border-color: $primary-color;
     }
 }
 
 .create-post-textarea {
     width: 100%;
     padding: 10px 12px;
-    border: 1px solid #ddd;
+    border: 1px solid #000;
     border-radius: 6px;
     font-size: 14px;
     min-height: 100px;
     resize: vertical;
     font-family: inherit;
     transition: border-color 0.2s ease;
+    background: #FFF;
 
     &:focus {
         outline: none;
-        border-color: #007bff;
+        border-color: $primary-color;
     }
 }
 
 .create-post-file-button {
-    background: #f8f9fa;
-    border: 1px solid #ddd;
+    background: #FFF;
     padding: 10px 16px;
     border-radius: 6px;
+    border: #000 solid 1.5px;
     cursor: pointer;
     font-size: 14px;
     transition: all 0.2s ease;
+    font-weight: 500;
 
     &:hover {
-        background: #e9ecef;
-        border-color: #adb5bd;
+        background: #c4c4c4;
     }
 }
 
@@ -188,16 +199,14 @@
 
 .create-post-actions {
     display: flex;
+    
     gap: 12px;
-    justify-content: flex-end;
-    margin-top: 24px;
-    padding-top: 20px;
-    border-top: 1px solid #f0f0f0;
+    
 }
 
 .create-post-submit-button {
-    background: #007bff;
-    color: white;
+    background: $primary-color;
+    color: #000;
     border: none;
     padding: 10px 20px;
     border-radius: 6px;
@@ -205,10 +214,14 @@
     font-size: 14px;
     font-weight: 500;
     transition: background-color 0.2s ease;
-    min-width: 120px;
+    min-width: auto;
+    width: 100%;
+    text-align: center;
+    
+    //min-width: 100px;
 
     &:hover:not(:disabled) {
-        background: #0056b3;
+        background: $hover-color;
     }
 
     &:disabled {
@@ -218,19 +231,21 @@
 }
 
 .create-post-cancel-button {
-    background: #6c757d;
-    color: white;
-    border: none;
+    border: #000 solid 1.5px;
+    color: #000;
     padding: 10px 20px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
     transition: background-color 0.2s ease;
-    min-width: 80px;
+    //min-width: 80px;
+    min-width: auto;
+    width: 100%;
+    text-align: center;
 
     &:hover {
-        background: #545b62;
+        background: #c4c4c4;
     }
 }
 
@@ -276,15 +291,5 @@
         width: 95%;
         padding: 16px;
         max-height: 85vh;
-    }
-
-    .create-post-actions {
-        flex-direction: column;
-    }
-
-    .create-post-submit-button,
-    .create-post-cancel-button {
-        min-width: auto;
-        width: 100%;
     }
 }
