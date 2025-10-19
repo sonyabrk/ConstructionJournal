@@ -52,7 +52,7 @@ class TaskService {
             throw error;
         }
     }
-    // PATCH-запрос - обновление статуса замечания
+    // PATCH-запрос - обновление статуса (замечания)
     async updateIssueStatus(issueId: number, status: Issue['status']): Promise<Issue> {
         try {
             const res = await api.patch<ApiResponse<Issue>>(`/issues/${issueId}`, { status });
