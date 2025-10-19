@@ -136,9 +136,15 @@ const CreatePostCard = ({ currentUser, onPostCreated, onCancel, projectId }: Cre
     };
 
     const handleOverlayClick = (e: React.MouseEvent) => {
+        // Проверяем, что клик был именно на оверлей, а не на его дочерние элементы
         if (e.target === e.currentTarget && onCancel) {
             onCancel();
         }
+    };
+
+    const handleModalContentClick = (e: React.MouseEvent) => {
+        // Останавливаем всплытие события, чтобы клик внутри модалки не закрывал её
+        e.stopPropagation();
     };
 
     const handleSubmit = async (event: React.FormEvent) => {
@@ -156,14 +162,14 @@ const CreatePostCard = ({ currentUser, onPostCreated, onCancel, projectId }: Cre
         setIsSubmitting(true);
         try {
             const finalTitle = `[${postData.type}] ${postData.title}`;
-            
+
             const postRequest = {
                 title: finalTitle,
                 content: postData.content,
                 author: currentUser.id,
                 object: projectId,
                 files: postData.files.length > 0 ? postData.files : undefined,
-                status: 'published' 
+                status: 'published'
             };
 
             let createdPost: Post;
@@ -182,7 +188,7 @@ const CreatePostCard = ({ currentUser, onPostCreated, onCancel, projectId }: Cre
 
                 const actionId = await offlineService.saveAction('CREATE_POST', postRequest);
                 console.log('📱 Post saved offline with ID:', actionId);
-                
+
                 createdPost = {
                     id: parseInt(actionId),
                     title: finalTitle,
@@ -197,7 +203,7 @@ const CreatePostCard = ({ currentUser, onPostCreated, onCancel, projectId }: Cre
             if (onPostCreated) {
                 onPostCreated(createdPost);
             }
-            
+
         } catch (error) {
             console.error('Ошибка при создании поста:', error);
             alert('Ошибка при создании поста');
@@ -214,8 +220,10 @@ const CreatePostCard = ({ currentUser, onPostCreated, onCancel, projectId }: Cre
             aria-modal="true"
             aria-labelledby="create-post-title"
         >
-            <div className="create-post-modal-content">
-
+            <div
+                className="create-post-modal-content"
+                onClick={handleModalContentClick} // Добавляем обработчик для контента
+            >
                 <div className="create-post-header">
                     <h1 id="create-post-title">Создание записи</h1>
                 </div>
@@ -258,6 +266,7 @@ const CreatePostCard = ({ currentUser, onPostCreated, onCancel, projectId }: Cre
                             value={postData.content}
                             onChange={(e) => handleInputChange('content', e.target.value)}
                             required
+                            rows={6} // Добавляем фиксированное количество строк для лучшего UX
                         />
                     </div>
 

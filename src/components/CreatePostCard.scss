@@ -107,6 +107,7 @@ $hover-color: #63564E;
     font-size: 14px;
     transition: border-color 0.2s ease;
     background: #FFF;
+    color: #000;
 
     &:focus {
         outline: none;
@@ -125,6 +126,7 @@ $hover-color: #63564E;
     font-family: inherit;
     transition: border-color 0.2s ease;
     background: #FFF;
+    color: #000;
 
     &:focus {
         outline: none;
