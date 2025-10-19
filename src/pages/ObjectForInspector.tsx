@@ -232,6 +232,7 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
         console.log('Обзор пользователя:', user);
         navigate(`/user/${user.id}`);
     };
+    
 
     if (loading) return <div className="loadingObjInsp">Загрузка...</div>;
     if (error) return <div className="errorObjInsp">Ошибка: {error}</div>;
