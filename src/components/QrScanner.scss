@@ -1,0 +1,404 @@
+@use '../pages/reset.scss';
+
+$primary-color: #87786F;
+$hover-color: #63564E;
+$default-color: #FFF;
+$defoult-border-radius: 10px;
+
+@mixin h3-style {
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+@mixin h4-style {
+    font-weight: 500;
+}
+
+body {
+    .qr-scanner-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        padding: 20px;
+
+        .qr-scanner-modal-content {
+            background: $default-color;
+            border-radius: $defoult-border-radius;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: #000 solid 2px;
+
+            .qr-scanner-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px;
+                border-bottom: #000 solid 2px;
+                
+                h2 {
+                    margin: 0;
+                    font-size: 1.5rem;
+                    color: #000;
+                    font-weight: 600;
+                    @include h3-style;
+                }
+            }
+
+            .qr-scanner-close {
+                background: none;
+                border: none;
+                font-size: 2rem;
+                cursor: pointer;
+                color: #000;
+                padding: 0;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                transition: background-color 0.3s ease;
+                
+                &:hover {
+                    background: #f5f5f5;
+                }
+            }
+
+            .qr-scanner-body {
+                padding: 0;
+
+                .qr-scanner-error {
+                    background: #fee;
+                    border: #fcc solid 2px;
+                    color: #c33;
+                    padding: 16px 20px;
+                    margin: 0;
+                    text-align: center;
+                    font-weight: 500;
+                    border-left: none;
+                    border-right: none;
+                }
+
+                .qr-scanner-tabs {
+                    display: flex;
+                    border-bottom: #000 solid 2px;
+
+                    .tab-button {
+                        flex: 1;
+                        background: none;
+                        border: none;
+                        padding: 16px;
+                        font-size: 1rem;
+                        font-weight: 500;
+                        color: #666;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        text-align: center;
+                        
+                        &.active {
+                            color: #000;
+                            background: #f5f5f5;
+                            font-weight: 600;
+                        }
+                        
+                        &:hover:not(.active) {
+                            background: #f8f9fa;
+                            color: #000;
+                        }
+                    }
+                }
+
+                .qr-scanner-content {
+                    padding: 20px;
+
+                    .camera-scanner {
+                        position: relative;
+                        border-radius: $defoult-border-radius;
+                        overflow: hidden;
+                        background: #000;
+                        border: #000 solid 2px;
+                        min-height: 300px;
+
+                        #qr-scanner-container {
+                            width: 100%;
+                            min-height: 300px;
+                        }
+
+                        .camera-overlay {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            bottom: 0;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            pointer-events: none;
+                            
+                            .scan-frame {
+                                width: 200px;
+                                height: 200px;
+                                border: 2px solid $primary-color;
+                                border-radius: $defoult-border-radius;
+                                margin-bottom: 20px;
+                                position: relative;
+                                
+                                &::before,
+                                &::after {
+                                    content: '';
+                                    position: absolute;
+                                    width: 20px;
+                                    height: 20px;
+                                    border: 2px solid $primary-color;
+                                }
+                                
+                                &::before {
+                                    top: -2px;
+                                    left: -2px;
+                                    border-right: none;
+                                    border-bottom: none;
+                                }
+                                
+                                &::after {
+                                    bottom: -2px;
+                                    right: -2px;
+                                    border-left: none;
+                                    border-top: none;
+                                }
+                            }
+                            
+                            p {
+                                color: $default-color;
+                                font-weight: 500;
+                                text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+                                margin: 0;
+                                @include h4-style;
+                            }
+                        }
+                    }
+
+                    .upload-scanner {
+                        text-align: center;
+
+                        .upload-area {
+                            border: 2px dashed #000;
+                            border-radius: $defoult-border-radius;
+                            padding: 60px 40px;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                            background: #fafafa;
+                            
+                            &:hover {
+                                border-color: $primary-color;
+                                background: #f0f0f0;
+                            }
+                        }
+
+                        .upload-icon {
+                            font-size: 3rem;
+                            margin-bottom: 16px;
+                        }
+
+                        .upload-area h3 {
+                            margin: 0 0 8px 0;
+                            color: #000;
+                            font-size: 1.25rem;
+                            @include h3-style;
+                        }
+
+                        .upload-area p {
+                            margin: 0;
+                            color: #666;
+                            font-size: 0.9rem;
+                        }
+
+                        .upload-formats {
+                            margin-top: 16px;
+                            
+                            p {
+                                color: #888;
+                                font-size: 0.8rem;
+                                margin: 0;
+                            }
+                        }
+                    }
+                }
+
+                .qr-processing {
+                    text-align: center;
+                    padding: 20px;
+                    
+                    .spinner {
+                        border: 3px solid #f3f3f3;
+                        border-top: 3px solid $primary-color;
+                        border-radius: 50%;
+                        width: 40px;
+                        height: 40px;
+                        animation: spin 1s linear infinite;
+                        margin: 0 auto 16px;
+                    }
+                    
+                    p {
+                        margin: 0;
+                        color: #000;
+                        font-weight: 500;
+                        @include h4-style;
+                    }
+                    
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                }
+
+                .qr-scanner-info {
+                    background: #f8f9fa;
+                    padding: 20px;
+                    border-radius: 0 0 $defoult-border-radius $defoult-border-radius;
+                    font-size: 0.9rem;
+                    color: #666;
+                    line-height: 1.5;
+                    border-top: #000 solid 2px;
+                    
+                    strong {
+                        color: #000;
+                        font-weight: 600;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Медиа-запросы для адаптивности
+@media (max-width: 768px) {
+    body {
+        .qr-scanner-modal-overlay {
+            padding: 10px;
+
+            .qr-scanner-modal-content {
+                max-width: 100%;
+                max-height: 95vh;
+
+                .qr-scanner-header {
+                    padding: 15px;
+                    
+                    h2 {
+                        font-size: 1.3rem;
+                    }
+                }
+
+                .qr-scanner-body {
+                    .qr-scanner-content {
+                        padding: 15px;
+
+                        .camera-scanner {
+                            min-height: 250px;
+
+                            #qr-scanner-container {
+                                min-height: 250px;
+                            }
+
+                            .camera-overlay {
+                                .scan-frame {
+                                    width: 150px;
+                                    height: 150px;
+                                }
+                            }
+                        }
+
+                        .upload-scanner {
+                            .upload-area {
+                                padding: 40px 20px;
+                            }
+                        }
+                    }
+
+                    .qr-scanner-info {
+                        padding: 15px;
+                        font-size: 0.85rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        .qr-scanner-modal-overlay {
+            padding: 5px;
+
+            .qr-scanner-modal-content {
+                border-radius: 8px;
+
+                .qr-scanner-header {
+                    padding: 12px;
+                    
+                    h2 {
+                        font-size: 1.2rem;
+                    }
+                }
+
+                .qr-scanner-body {
+                    .qr-scanner-tabs {
+                        .tab-button {
+                            padding: 12px;
+                            font-size: 0.9rem;
+                        }
+                    }
+
+                    .qr-scanner-content {
+                        padding: 12px;
+
+                        .camera-scanner {
+                            min-height: 200px;
+
+                            #qr-scanner-container {
+                                min-height: 200px;
+                            }
+
+                            .camera-overlay {
+                                .scan-frame {
+                                    width: 120px;
+                                    height: 120px;
+                                }
+                                
+                                p {
+                                    font-size: 0.9rem;
+                                }
+                            }
+                        }
+
+                        .upload-scanner {
+                            .upload-area {
+                                padding: 30px 16px;
+                                
+                                h3 {
+                                    font-size: 1.1rem;
+                                }
+                            }
+                        }
+                    }
+
+                    .qr-scanner-info {
+                        padding: 12px;
+                        font-size: 0.8rem;
+                    }
+                }
+            }
+        }
+    }
+}

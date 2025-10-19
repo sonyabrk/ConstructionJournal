@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import ObjectCard from '../components/ObjectCard';
+import QrScanner from '../components/QrScanner';
 import ScanBtn from '../assets/scaner.svg';
 import FilterBtn from '../assets/filter.svg';
 import { type ConstructionProject, type User } from '../services/types';
@@ -18,11 +20,14 @@ const ObjectPage = ({ currentUser }: ObjectPageProps) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filterActive, setFilterActive] = useState(false);
     const [statusFilter, setStatusFilter] = useState<string>('all');
+    const [isScannerOpen, setIsScannerOpen] = useState(false);
+
+    const navigate = useNavigate();
 
     // возможности на основе роли
     const userRole = currentUser?.role;
     const isContractor = userRole === 'ROLE_CONTRACTOR';
-    //const isSupervision = userRole === 'ROLE_SUPERVISION';
+    const isSupervision = userRole === 'ROLE_SUPERVISION';
     const isInspector = userRole === 'ROLE_INSPECTOR';
     //const isAdmin = userRole === 'ROLE_ADMIN';
 
@@ -60,6 +65,16 @@ const ObjectPage = ({ currentUser }: ObjectPageProps) => {
         fetchData();
     }, []);
 
+    const handleQrScanned = (projectId: number) => {
+        console.log('QR scanned for project:', projectId);
+        // Перенаправляем на страницу объекта
+        navigate(`/object/${projectId}`);
+    };
+
+    const handleScanClick = () => {
+        setIsScannerOpen(true);
+    };
+
     const filteredProjects = (projects || []).filter(project => {
         const matchesSearch = project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                             project.description.toLowerCase().includes(searchTerm.toLowerCase());
@@ -85,8 +100,9 @@ const ObjectPage = ({ currentUser }: ObjectPageProps) => {
                         </div>
 
                         <button
-                            onClick={() => console.log('Сканирование...')}
+                            onClick={handleScanClick}
                             className="scanBtn"
+                            title="Сканировать QR-код"
                         >
                             <img src={ScanBtn} alt="Сканер" width="30" height="30" />
                         </button>
@@ -155,6 +171,18 @@ const ObjectPage = ({ currentUser }: ObjectPageProps) => {
                         <p>На данный момент нет объектов, назначенных для вашей проверки.</p>
                     </div>
                 )}
+
+                {isSupervision && filteredProjects.length === 0 && !searchTerm && (
+                    <div className="role-info inspector-info">
+                        <p>На данный момент нет объектов, назначенных для вашей проверки.</p>
+                    </div>
+                )}
+
+                <QrScanner
+                    isOpen={isScannerOpen}
+                    onClose={() => setIsScannerOpen(false)}
+                    onQrScanned={handleQrScanned}
+                />
             </div>
         </div>
     );
