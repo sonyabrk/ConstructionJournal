@@ -40,6 +40,7 @@ export interface Post {
     files: string[]; 
     status: string;
     author: User;
+    type?: string;
 }
 
 export interface PostFile {
@@ -54,6 +55,7 @@ export interface CreatePostRequest {
     author: number; 
     object: number; 
     files?: File[]; 
+    status?: string;
 }
 
 export interface RefreshTokenRequest {
@@ -72,14 +74,6 @@ export interface CreateProjectRequest {
     description?: string;
     constractorId: number;
     supervisionId: number;
-}
-
-export interface CreatePostRequest {
-    title: string;
-    content: string;
-    object: number; 
-    author: number; 
-    coordinates: [number, number]; 
 }
 
 export interface ApiResponse<T = unknown> {
