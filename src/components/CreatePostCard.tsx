@@ -151,15 +151,6 @@ const CreatePostCard = ({ currentUser, onPostCreated, onCancel }: CreatePostCard
             aria-labelledby="create-post-title"
         >
             <div className="create-post-modal-content">
-                {onCancel && (
-                    <button
-                        className="create-post-close-button"
-                        onClick={onCancel}
-                        aria-label="Закрыть модальное окно"
-                    >
-                        ×
-                    </button>
-                )}
 
                 <div className="create-post-header">
                     <h1 id="create-post-title">Создание записи</h1>
@@ -246,6 +237,13 @@ const CreatePostCard = ({ currentUser, onPostCreated, onCancel }: CreatePostCard
                     </div>
 
                     <div className="create-post-actions">
+                        <button
+                            type="submit"
+                            className="create-post-submit-button"
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? 'Создание...' : 'Создать запись'}
+                        </button>
                         {onCancel && (
                             <button
                                 type="button"
@@ -255,13 +253,6 @@ const CreatePostCard = ({ currentUser, onPostCreated, onCancel }: CreatePostCard
                                 Отмена
                             </button>
                         )}
-                        <button
-                            type="submit"
-                            className="create-post-submit-button"
-                            disabled={isSubmitting}
-                        >
-                            {isSubmitting ? 'Создание...' : 'Создать запись'}
-                        </button>
                     </div>
                 </form>
             </div>
