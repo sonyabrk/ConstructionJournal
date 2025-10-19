@@ -27,9 +27,7 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
     const [isCreatePostVisible, setIsCreatePostVisible] = useState(false);
     const [isViewPostVisible, setIsViewPostVisible] = useState(false);
     const [selectedPost, setSelectedPost] = useState<Post | null>(null);
-    const [workers, setWorkers] = useState<User[]>([]); // Ваш список рабочих
     const [selectedWorker, setSelectedWorker] = useState<User | null>(null);
-    const [currentUserRole, setCurrentUserRole] = useState(currentUser?.role); // Текущая роль пользователя
     
     // роли и возможности на основе currentUser из пропсов
     const userRole = currentUser?.role;
@@ -38,7 +36,7 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
     const isInspector = userRole === 'ROLE_INSPECTOR';
     const isAdmin = userRole === 'ROLE_ADMIN';
 
-    // права доступа для файлов л
+    // права доступа для файлов
     const canUploadAct = isContractor || isSupervision || isAdmin;
     const canDownloadAct = isContractor || isSupervision || isInspector || isAdmin;
     const canUploadComposition = isContractor || isAdmin;
@@ -241,12 +239,6 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
         // логика добавления участника
     };
 
-    const handleUserReview = (user: User) => {
-        console.log('Обзор пользователя:', user);
-        navigate(`/user/${user.id}`);
-    };
-    
-
     const handleOpenCreatePost = () => {
         setIsCreatePostVisible(true);
     };
@@ -292,7 +284,7 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
             console.log('Удаление рабочего с ID:', workerId);
 
             // Обновление списка рабочих
-            setWorkers(prev => prev.filter(worker => worker.id !== workerId));
+            // setWorkers(prev => prev.filter(worker => worker.id !== workerId));
         } catch (error) {
             console.error('Ошибка при удалении рабочего:', error);
         }
@@ -492,11 +484,10 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                     {project.users && project.users.length > 0 ? (
                         project.users.map((user: User, index) => (
                             <WorkCard 
-
                                 key={user.id || `user-${index}`} 
                                 user={user}
                                 onReview={handleReviewWorker}
-                                currentUserRole={currentUserRole}
+                                currentUserRole={userRole}
                             />
                         ))
                     ) : (
@@ -510,7 +501,7 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                     worker={selectedWorker}
                     onClose={handleCloseWorkerView}
                     onDelete={handleDeleteWorker}
-                    currentUserRole={currentUserRole}
+                    currentUserRole={userRole}
                 />
             )}
 
