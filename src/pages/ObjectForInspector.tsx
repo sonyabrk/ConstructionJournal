@@ -242,7 +242,6 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
     };
     
 
-    // Обработчики для создания поста
     const handleOpenCreatePost = () => {
         setIsCreatePostVisible(true);
     };
@@ -257,7 +256,6 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
         // Обновить список постов если нужно
     };
 
-    // Обработчики для просмотра поста
     const handleReviewPost = (post: Post) => {
         setSelectedPost(post);
         setIsViewPostVisible(true);
