@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { type PostFile, type User, type Post } from '../services/types';
+import { type User, type Post } from '../services/types';
+import { postService } from '../services/postService';
+import { offlineService } from '../services/offlineService';
 import './CreatePostCard.scss';
 
 interface CreatePostCardProps {
     currentUser?: User | null;
     onPostCreated?: (post: Post) => void;
     onCancel?: () => void;
+    projectId: number;
 }
 
 // Типы записей по ролям
@@ -28,7 +31,7 @@ type InspectorRecordType =
 
 type RecordType = ContractorRecordType | SupervisionRecordType | InspectorRecordType;
 
-const CreatePostCard = ({ currentUser, onPostCreated, onCancel }: CreatePostCardProps) => {
+const CreatePostCard = ({ currentUser, onPostCreated, onCancel, projectId }: CreatePostCardProps) => {
     const userRole = currentUser?.role;
     const isContractor = userRole === 'ROLE_CONTRACTOR';
     const isSupervision = userRole === 'ROLE_SUPERVISION';
@@ -45,7 +48,7 @@ const CreatePostCard = ({ currentUser, onPostCreated, onCancel }: CreatePostCard
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Блокировка скролла при открытии модалки
+    // блокировка скролла при открытии модалки
     React.useEffect(() => {
         document.body.classList.add('create-post-body-no-scroll');
 
@@ -54,7 +57,7 @@ const CreatePostCard = ({ currentUser, onPostCreated, onCancel }: CreatePostCard
         };
     }, []);
 
-    // Закрытие по ESC
+    // закрытие по ESC
     React.useEffect(() => {
         const handleEscape = (e: KeyboardEvent) => {
             if (e.key === 'Escape' && onCancel) {
@@ -66,7 +69,7 @@ const CreatePostCard = ({ currentUser, onPostCreated, onCancel }: CreatePostCard
         return () => document.removeEventListener('keydown', handleEscape);
     }, [onCancel]);
 
-    // Получение доступных типов записей в зависимости от роли
+    // получение доступных типов записей в зависимости от роли
     const getRecordTypesByRole = (): RecordType[] => {
         if (isContractor) {
             return [
@@ -87,6 +90,20 @@ const CreatePostCard = ({ currentUser, onPostCreated, onCancel }: CreatePostCard
                 'Добавление нарушения',
                 'Подтверждение исправления нарушения',
                 'Отклонение исправления нарушения'
+            ];
+        } else if (isAdmin) {
+            return [
+                'Добавление ТТН',
+                'Отчеты по работам',
+                'Исправление замечаний',
+                'Исправление нарушений',
+                'Инициирование лаб. отбора',
+                'Добавление нарушения',
+                'Подтверждение исправления нарушения',
+                'Отклонение исправления нарушения',
+                'Добавление замечания',
+                'Подтверждение исправления замечания',
+                'Отклонение исправления замечания'
             ];
         }
         return [];
@@ -118,27 +135,74 @@ const CreatePostCard = ({ currentUser, onPostCreated, onCancel }: CreatePostCard
         }));
     };
 
+    const handleOverlayClick = (e: React.MouseEvent) => {
+        if (e.target === e.currentTarget && onCancel) {
+            onCancel();
+        }
+    };
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        if (!postData.type || !postData.title) {
+        if (!postData.type || !postData.title || !postData.content) {
             alert('Пожалуйста, заполните все обязательные поля');
+            return;
+        }
+
+        if (!currentUser?.id) {
+            alert('Пользователь не авторизован');
             return;
         }
 
         setIsSubmitting(true);
         try {
-            console.log('Создание поста:', postData);
-            // Здесь будет логика создания поста через API
+            const finalTitle = `[${postData.type}] ${postData.title}`;
+            
+            const postRequest = {
+                title: finalTitle,
+                content: postData.content,
+                author: currentUser.id,
+                object: projectId,
+                files: postData.files.length > 0 ? postData.files : undefined,
+                status: 'published' 
+            };
+
+            let createdPost: Post;
+
+            if (offlineService.isOnline()) {
+                // Онлайн режим
+                createdPost = await postService.createPost(postRequest);
+                console.log('✅ Post created online:', createdPost);
+            } else {
+                // Офлайн режим
+                if (!offlineService.canSavePostOffline(postRequest)) {
+                    alert('Невозможно сохранить пост с файлами в офлайн режиме');
+                    setIsSubmitting(false);
+                    return;
+                }
+
+                const actionId = await offlineService.saveAction('CREATE_POST', postRequest);
+                console.log('📱 Post saved offline with ID:', actionId);
+                
+                createdPost = {
+                    id: parseInt(actionId),
+                    title: finalTitle,
+                    content: postData.content,
+                    created_at: new Date().toISOString(),
+                    files: [],
+                    status: 'offline',
+                    author: currentUser
+                };
+            }
+
+            if (onPostCreated) {
+                onPostCreated(createdPost);
+            }
+            
         } catch (error) {
             console.error('Ошибка при создании поста:', error);
+            alert('Ошибка при создании поста');
         } finally {
             setIsSubmitting(false);
-        }
-    };
-
-    const handleOverlayClick = (e: React.MouseEvent) => {
-        if (e.target === e.currentTarget && onCancel) {
-            onCancel();
         }
     };
 

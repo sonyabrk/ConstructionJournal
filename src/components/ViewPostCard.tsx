@@ -8,8 +8,7 @@ interface ViewPostCardProps {
     onClose?: () => void;
 }
 
-const ViewPostCard = ({ post, currentUser, onClose }: ViewPostCardProps) => {
-    // Блокировка скролла при открытии модалки
+const ViewPostCard = ({ post, onClose }: ViewPostCardProps) => {
     useEffect(() => {
         document.body.classList.add('view-post-body-no-scroll');
 
