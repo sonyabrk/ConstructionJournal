@@ -5,6 +5,7 @@ import WorkCard from '../components/WorkCard';
 import PostCard from '../components/PostCard';
 import CreatePostCard from '../components/CreatePostCard';
 import ViewPostCard from '../components/ViewPostCard';
+import ViewWorkerCard from '../components/ViewWorkerCard';
 import Header from "../components/Header";
 import MapComponent from '../components/MapComponent';
 import { projectService } from '../services/projectService';
@@ -25,6 +26,9 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
     const [isCreatePostVisible, setIsCreatePostVisible] = useState(false);
     const [isViewPostVisible, setIsViewPostVisible] = useState(false);
     const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+    const [workers, setWorkers] = useState<User[]>([]); // Ваш список рабочих
+    const [selectedWorker, setSelectedWorker] = useState<User | null>(null);
+    const [currentUserRole, setCurrentUserRole] = useState(currentUser?.role); // Текущая роль пользователя
     
     // роли и возможности на основе currentUser из пропсов
     const userRole = currentUser?.role;
@@ -271,6 +275,28 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
         setIsCreatePostVisible(true);
     };
 
+    const handleReviewWorker = (worker: User) => {
+        setSelectedWorker(worker);
+    };
+
+    const handleCloseWorkerView = () => {
+        setSelectedWorker(null);
+    };
+
+    const handleDeleteWorker = async (workerId: number) => {
+        try {
+            // Логика удаления рабочего через API
+            // await deleteWorkerApi(workerId);
+            console.log('Удаление рабочего с ID:', workerId);
+
+            // Обновление списка рабочих
+            setWorkers(prev => prev.filter(worker => worker.id !== workerId));
+        } catch (error) {
+            console.error('Ошибка при удалении рабочего:', error);
+        }
+    };
+
+
     if (loading) return <div className="loadingObjInsp">Загрузка...</div>;
     if (error) return <div className="errorObjInsp">Ошибка: {error}</div>;
     if (!project) return <div className="errorObjInsp">Объект не найден</div>;
@@ -430,10 +456,10 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                     {project.users && project.users.length > 0 ? (
                         project.users.map((user: User) => (
                             <WorkCard 
-                                key={user.id} 
+                                key={user.id}
                                 user={user}
-                                onReview={handleUserReview}
-                                currentUserRole={userRole}
+                                onReview={handleReviewWorker}
+                                currentUserRole={currentUserRole}
                             />
                         ))
                     ) : (
@@ -441,6 +467,15 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                     )}
                 </div>
             </section>
+
+            {selectedWorker && (
+                <ViewWorkerCard
+                    worker={selectedWorker}
+                    onClose={handleCloseWorkerView}
+                    onDelete={handleDeleteWorker}
+                    currentUserRole={currentUserRole}
+                />
+            )}
 
             {/* Дополнительные секции для разных ролей */}
             {isContractor && (

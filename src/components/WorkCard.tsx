@@ -9,6 +9,11 @@ interface WorkCardProps {
 
 const WorkCard = ({ user, onReview, currentUserRole }: WorkCardProps) => {
     const canEdit = currentUserRole === 'ROLE_CONTRACTOR' || currentUserRole === 'ROLE_SUPERVISION';
+    const handleReviewClick = () => {
+        if (onReview) {
+            onReview(user);
+        }
+    };
     
     return (
         <div className="workCard">
@@ -19,7 +24,7 @@ const WorkCard = ({ user, onReview, currentUserRole }: WorkCardProps) => {
             {canEdit && (
                 <button 
                     className="reviewBtn"
-                    onClick={() => onReview(user)}
+                    onClick={handleReviewClick}
                 >
                     Просмотр
                 </button>
