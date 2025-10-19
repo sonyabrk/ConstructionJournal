@@ -14,6 +14,10 @@ class PostService {
             if (postData.object) {
                 formData.append('object', postData.object.toString());
             }
+
+            if (postData.status) {
+                formData.append('status', postData.status);
+            }
             
             if (postData.files && postData.files.length > 0) {
                 postData.files.forEach((file) => {
