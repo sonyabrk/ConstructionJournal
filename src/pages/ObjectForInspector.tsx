@@ -13,6 +13,8 @@ import { offlineService } from '../services/offlineService';
 import { fileService } from '../services/fileService';
 import './ObjectForInspector.scss';
 
+import MyGanttChart from '../components/MyGanttChart';
+
 interface ObjectForInspectorProps {
   currentUser?: User | null;
 }
@@ -443,7 +445,7 @@ const ObjectForInspector = ({ currentUser }: ObjectForInspectorProps) => {
                 <h3>Сетевой график работ</h3>
                 <div className="scheduleContainer">
                     <div className="schedulePlaceholder">
-                        Сетевой график будет реализован в ближайшее время
+                        <MyGanttChart />
                     </div>
                 </div>
             </section>
