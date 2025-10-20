@@ -189,3 +189,4 @@ const ObjectPage = ({ currentUser }: ObjectPageProps) => {
 };
 
 export default ObjectPage;
+
