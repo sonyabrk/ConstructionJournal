@@ -32,7 +32,7 @@ const MapComponent = ({
     popupText = 'Объект'
 }: MapComponentProps) => {
 
-    if (!coordinates || coordinates.length !== 2) {
+    if (!coordinates) {
         return (
             <div className="mapNotFound">Координаты объекта не указаны</div>
         );
