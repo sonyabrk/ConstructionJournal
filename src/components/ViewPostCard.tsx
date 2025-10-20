@@ -71,13 +71,6 @@ const ViewPostCard = ({ post, onClose }: ViewPostCardProps) => {
         }
     };
 
-    // Функция для определения типа файла и иконки
-    const getFileIcon = (fileName: string) => {
-        const extension = fileName.split('.').pop()?.toLowerCase();
-
-        
-    };
-
     return (
         <div
             className="view-post-modal-overlay"
